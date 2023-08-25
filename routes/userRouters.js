@@ -5,7 +5,7 @@ const userRouter = express.Router();
 
 userRouter.post('/register', userControllers.register);
 
-userRouter.post('/login');
+userRouter.post('/login', userControllers.login);
 
 userRouter.post('/logout');
 
