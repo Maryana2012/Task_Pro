@@ -21,7 +21,7 @@ const register = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ ...req.body, password: hashPassword, photo: "" });
+    const newUser = await User.create({...req.body, password: hashPassword, photo: "" });
     console.log(newUser)
     const payload = {
         id: newUser._id
@@ -31,11 +31,13 @@ const register = async (req, res) => {
     await User.findByIdAndUpdate(newUser._id, { token });
  
     res.status(200).json({
-        email,
-        name,
+        user: {
+            email,
+            name,
+            theme: newUser.theme,
+            photo: newUser.photo 
+        },
         token,
-        theme: newUser.theme,
-        photo: newUser.photo
     })
 }
 
@@ -58,9 +60,11 @@ const login = async (req, res) => {
     await User.findByIdAndUpdate(user._id, { token });
 
     res.status(200).json({
-        email,
+        user: {
+          email,
+          theme: user.theme  
+        },
         token,
-        theme: user.theme
     })
 }
 
@@ -79,13 +83,22 @@ const update = async (req, res) => {
         res.status(401).json({ message: ` user with ${_id} not found` });
         return;
     } 
-    const updatedUser = await User.findByIdAndUpdate(_id, {
-        email: email,
-        name: name,
-        password: password, 
-        photo: photo, 
-    }, { new: true });
-    res.status(200).json(updatedUser);
+    const updatedUser = await User.findByIdAndUpdate(_id,
+         {
+         email,
+         name,
+         password, 
+         photo,  
+        }, { new: true });
+    res.status(200).json({
+        user: {
+            email: updatedUser.email,
+            name: updatedUser.name,
+            password: updatedUser.password,
+            photo: updatedUser.photo,
+           
+        }
+    });
 
 }
 
