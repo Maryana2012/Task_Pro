@@ -44,6 +44,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+ 
     if (!user) {
         res.status(401).json({ message: 'Email or password wrong' });
         return;
@@ -53,6 +54,11 @@ const login = async (req, res) => {
         res.status(401).json({ message: 'Email or password wrong' });
         return;
     } 
+    if (user.token) {
+        res.status(401).json({ message: 'This user are logged ' });
+        return;
+    }
+
     const payload = {
         id: user._id
     }
@@ -83,11 +89,12 @@ const update = async (req, res) => {
         res.status(401).json({ message: ` user with ${_id} not found` });
         return;
     } 
+    const hashPassword = await bcrypt.hash(password, 10);
     const updatedUser = await User.findByIdAndUpdate(_id,
          {
          email,
          name,
-         password, 
+         password:hashPassword, 
          photo,  
         }, { new: true });
     res.status(200).json({
@@ -96,7 +103,7 @@ const update = async (req, res) => {
             name: updatedUser.name,
             password: updatedUser.password,
             photo: updatedUser.photo,
-           
+            theme: user.theme
         }
     });
 
