@@ -10,28 +10,32 @@ dotenv.config();
 const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
     const user = await User.findOne({ email });
 
     if (user) {
         res.status(409).json({ message: 'Email in use' });
         return;
         // throw HttpError(409, "Email in use")
+
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ ...req.body, password: hashPassword });
-    
+    const newUser = await User.create({ ...req.body, password: hashPassword, photo: "" });
+    console.log(newUser)
     const payload = {
         id: newUser._id
     }
 
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
     await User.findByIdAndUpdate(newUser._id, { token });
-
+ 
     res.status(200).json({
         email,
-        token
+        name,
+        token,
+        theme: newUser.theme,
+        photo: newUser.photo
     })
 }
 
@@ -55,11 +59,39 @@ const login = async (req, res) => {
 
     res.status(200).json({
         email,
-        token
+        token,
+        theme: user.theme
     })
+}
+
+const logout = async (req, res) => {
+    const { _id } = req.user;
+    await User.findByIdAndUpdate(_id, { token: "" });
+    res.status(204).json({message: "No content"})
+}
+
+const update = async (req, res) => {
+    const { photo, name, email, password } = req.body;
+    const { _id } = req.params;
+    const user = await User.findById(_id);
+
+    if (!user) {
+        res.status(401).json({ message: ` user with ${_id} not found` });
+        return;
+    } 
+    const updatedUser = await User.findByIdAndUpdate(_id, {
+        email: email,
+        name: name,
+        password: password, 
+        photo: photo, 
+    }, { new: true });
+    res.status(200).json(updatedUser);
+
 }
 
 export default {
     register,
-    login
+    login,
+    logout,
+    update
 }

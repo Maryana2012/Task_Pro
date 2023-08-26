@@ -1,5 +1,5 @@
 const mainPageController = (req, res) => {
-    res.json({ message: "hello world" })
+    res.send(`<h1>Main Router</h1>`)
 }
  
 export default mainPageController;

@@ -6,11 +6,22 @@ const userSchema = new Schema({
         required: [true, 'Email is required'],
         unique: true,
     },
+    name: {
+        type:String,
+    },
     password: {
         type: String,
         required: [true, 'Set password for user'],
     },
     token: String,
+    theme: {
+        type: String,
+        enum: ['dark', 'light', 'violet'],
+        default: 'dark'
+    },
+    photo: {
+        type: String,
+    }
 
 }, { versionKey: false })
 
