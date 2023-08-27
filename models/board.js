@@ -22,7 +22,7 @@ const boardSchema = new Schema({
     columns: {
         type: [{
             title: String,
-            boardId: Number,
+            board: Number,
             tasks: []
           }]
     }

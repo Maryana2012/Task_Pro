@@ -36,12 +36,34 @@ const addBoard = async (req, res, next) => {
       }
 }
 
-// const updateBoard = async (req, res, next) => {
-  
-// }
-// const deleteBoard = async (req, res, next) => {
-  
-// }
+const updateBoard = async (req, res, next) => {
+    try {
+        const { boardId } = req.params;
+        console.log(boardId);
+        const result = await Board.findByIdAndUpdate(boardId, req.body, { new: true });
+        if (!result) {
+          throw HttpError(404, "Not found");
+        }
+        res.json(result);
+      } catch (error) {
+        next(error);
+      }
+}
+
+const deleteBoard = async (req, res, next) => {
+    try {
+        const { boardId } = req.params;
+        const result = await Board.findByIdAndDelete(boardId);
+        if (!result) {
+          throw HttpError(404, "Not found");
+        }
+        res.json({
+          message: "board deleted",
+        });
+      } catch (error) {
+        next(error);
+      }
+}
 // const addColumnInBoard = async (req, res, next) => {
   
 // }
@@ -56,5 +78,9 @@ export default {
     getAllBoards,
     getBoard,
     addBoard,
-    // updateBoard
+    updateBoard, 
+    deleteBoard,
+    // addColumnInBoard,
+    // updateColumnInBoard,
+    // deleteColumnInBoard
 }

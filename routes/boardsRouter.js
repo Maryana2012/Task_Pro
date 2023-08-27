@@ -11,9 +11,9 @@ boardsRouter.get("/:boardId", userValidators.authenticate, boardsController.getB
 
 boardsRouter.post("/", userValidators.authenticate, boardsController.addBoard);
 
-// boardsRouter.put("/:boardId", boardsController.updateBoard);
+boardsRouter.put("/:boardId", userValidators.authenticate, boardsController.updateBoard);
 
-// boardsRouter.delete("/:boardId", boardsController.deleteBoard);
+boardsRouter.delete("/:boardId", userValidators.authenticate, boardsController.deleteBoard);
 
 // boardsRouter.post('/:boardId/columns', boardsController.addColumnInBoard);
 
