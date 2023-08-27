@@ -20,16 +20,12 @@ app.use(express.json())
 app.use('/', mainPageRouter);
 app.use('/users', userRouter)
 
-<<<<<<< Updated upstream
-=======
-// swagger -->
+
 app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocument)
 );
-// <--swagger
->>>>>>> Stashed changes
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })

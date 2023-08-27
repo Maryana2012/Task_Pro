@@ -22,9 +22,8 @@
     "/users/register": {
       "post": {
         "tags": ["Auth"],
-        "summary": "User registration",
+        "summary": "{ name, email, password }",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "Registration's object",
           "required": true,
@@ -38,14 +37,14 @@
         },
         "responses": {
           "201": {
-            "description": "Successful operation",
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "user": {
-                      "$ref": "#/components/schemas/RegistrationResponse"
+                      "$ref": "#/components/schemas/UserResponse"
                     },
                     "token": {
                       "$ref": "#/components/schemas/Token"
@@ -56,7 +55,7 @@
             }
           },
           "400": {
-            "description": "Bad request (invalid request body)",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
@@ -66,12 +65,14 @@
             }
           },
           "409": {
-            "description": "Provided email already exists",
-            "content": { "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/error409"
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error409"
+                }
               }
-            }}
+            }
           }
         }
       }
@@ -79,38 +80,106 @@
     "/users/login": {
       "post": {
         "tags": ["Auth"],
-        "summary": "Login user",
+        "summary": "{ email, password }",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Registration's object",
+          "description": "",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationRequest"
+                "$ref": "#/components/schemas/LoginRequest"
               }
             }
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/UserResponse"
+                    },
+                    "token": {
+                      "$ref": "#/components/schemas/Token"
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400"
+                }
+              }
+            }
           },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {}
+          "401": {
+            "description": "Unathorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error401"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/update/:_id": {
+      "put": {
+        "tags": ["Auth"],
+        "summary": "{ photo, name, email, password }",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "_id",
+            "required": "true",
+            "type": "string",
+            "description": "user's _id"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unathorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error401"
+                }
+              }
+            }
           }
         }
       }
@@ -118,38 +187,30 @@
     "/users/logout": {
       "post": {
         "tags": ["Auth"],
-        "summary": "Logout user",
+        "summary": "token",
         "parameters": [],
         "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "Registration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegistrationRequest"
-              }
-            }
-          }
-        },
+
         "responses": {
-          "201": {
-            "description": "Successful operation",
+          "204": {
+            "description": "No Content",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
+                  "$ref": "#/components/schemas/res204"
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {}
+          "401": {
+            "description": "Unathorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error401"
+                }
+              }
+            }
           }
         }
       }
@@ -163,63 +224,131 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "User's name",
-            "example": "Bohdan Ivanov"
+            "example": "Ivan Petrov"
           },
           "email": {
             "type": "string",
-            "description": "User's email",
-            "example": "bohdan@ukr.net",
+            "example": "ivan@example.com",
             "format": "email"
           },
           "password": {
             "type": "string",
-            "description": "User's password",
             "example": "qwerty123"
           }
         }
       },
-      "RegistrationResponse": {
+      "UserResponse": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "example": "7dh347fh4375fh45"
+          },
+          "name": {
+            "type": "string",
+            "example": "Ivan Petrov"
+          },
           "email": {
             "type": "string",
-            "description": "User's email",
+            "example": "ivan@example.com",
             "format": "email"
-          },
-          "userId": {
-            "type": "string",
-            "description": "User's id",
-            "example": "32143232436545474"
           },
           "thema": {
             "type": "string",
-            "description": "User's thema",
             "example": "dark"
           },
           "photo": {
             "type": "string",
-            "description": "User's photo",
+            "example": "https://en.gravatar.com/"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "ivan@example.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "UpdateUserRequest": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Anton Ptuchkin"
+          },
+          "email": {
+            "type": "string",
+            "example": "anton@example.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "example": "777qwerty"
+          },
+          "thema": {
+            "type": "string",
+            "example": "light"
+          },
+          "photo": {
+            "type": "string",
+            "example": "https://en.gravatar.com/etsvsd"
+          }
+        }
+      },
+      "UpdateUserResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Anton Ptuchkin"
+          },
+          "email": {
+            "type": "string",
+            "example": "anton@example.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "example": "777qwerty"
+          },
+          "thema": {
+            "type": "string",
+            "example": "light"
+          },
+          "photo": {
+            "type": "string",
             "example": "https://en.gravatar.com/"
           }
         }
       },
       "Token": {
         "type": "string",
-        "description": "User's token",
         "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
+      },
+      "res204": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "No content"
+          }
+        }
       },
       "error400": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "integer",
-            "description": "Error status code",
-            "example": "400"
-          },
           "message": {
             "type": "string",
-            "description": "Error message",
             "example": "Bad request"
           }
         }
@@ -227,29 +356,26 @@
       "error401": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "integer",
-            "description": "Error status code",
-            "example": "401"
-          },
           "message": {
             "type": "string",
-            "description": "Error message",
-            "example": "Email or password is wrong"
+            "example": "<Помилка від Joi або іншої бібліотеки валідації>"
+          }
+        }
+      },
+      "error404": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Not found"
           }
         }
       },
       "error409": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "integer",
-            "description": "Error status code",
-            "example": "409"
-          },
           "message": {
             "type": "string",
-            "description": "Error message",
             "example": "Email in use"
           }
         }
