@@ -14,12 +14,12 @@ const userLoginSchema = Joi.object({
 });
 
 
-// const userThemeSchema = Joi.object({
-//     theme: Joi.string().valid('dark', 'light', 'violet').required()
-// })
+const userThemeSchema = Joi.object({
+    theme: Joi.string().valid('dark', 'light', 'violet').required()
+})
     
 export default {
     userRegisterSchema,
     userLoginSchema,
-    // userThemeSchema,
+    userThemeSchema
 }

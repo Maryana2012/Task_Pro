@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import { isValidObjectId } from "mongoose";
 
 import userSchema from '../../schemas/userSchema.js';
-import User from '../../models/user.js'
+import User from '../../models/user.js';
+
 
 dotenv.config();
 const { SECRET_KEY } = process.env;
@@ -12,7 +13,8 @@ const isEmptyBody = (req, res, next) => {
     const keys = Object.keys(req.body);
      if (keys.length === 0) {
         // throw HttpError(400, `missing fields`);
-         res.status(400).json({ message: 'missing fields' });
+       res.status(400).json({ message: 'missing fields' });
+       return
     }
     next();
 }
@@ -22,19 +24,19 @@ const userRegisterValidator = (req, res, next) => {
    if (error) {
       if (error.details[0].type === "any.required") {
         // throw HttpError(400, `missing required ${error.details[0].path[0]} field`); 
-          res.status(400).json({ message: `missing required ${error.details[0].path[0]} field` });
-          return
+        res.status(400).json({ message: `missing required ${error.details[0].path[0]} field` });
+        return;
       } else if (error.details[0].type.includes('base')) {
         // throw HttpError(400, error.message); 
-          res.status(400).json( message.error );
-          return
+        res.status(400).json( message.error );
+        return;
       }
   }
   next();
 }  
 
 const userLoginValidator = (req, res, next) => {
-    const { error } = userSchema.userLoginSchema.validate(req.body);
+  const { error } = userSchema.userLoginSchema.validate(req.body);
    if (error) {
      if (error.details[0].type === "any.required") {
          console.log('error')
@@ -86,11 +88,19 @@ const isValidId = (req, res, next) => {
     next();
 }
 
-
+const isTheme = (req, res, next) => {
+  const { error } = userSchema.userThemeSchema.validate(req.body);
+  if (error) {
+    res.status(400).json({ message: 'select theme from [dark, light, violet]' });
+    return;
+  }
+  next();
+}
 export default {
   isEmptyBody,
   userRegisterValidator,
   userLoginValidator,
   authenticate,
-  isValidId 
+  isValidId,
+  isTheme
 }

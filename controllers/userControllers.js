@@ -32,12 +32,13 @@ const register = async (req, res) => {
  
     res.status(201).json({
         user: {
-            email,
+            _id,
             name,
+            email,
             theme: newUser.theme,
             photo: newUser.photo 
         },
-        token,
+        token
     })
 }
 
@@ -67,10 +68,12 @@ const login = async (req, res) => {
 
     res.status(200).json({
         user: {
+          _id: user._id,
           email,
-          theme: user.theme  
+          theme: user.theme,
+          photo: user.photo
         },
-        token,
+        token
     })
 }
 
@@ -81,7 +84,7 @@ const logout = async (req, res) => {
 }
 
 const update = async (req, res) => {
-    const { photo, name, email, password } = req.body;
+    const { name, email, password, photo } = req.body;
     const { _id } = req.params;
     const user = await User.findById(_id);
 
@@ -89,29 +92,37 @@ const update = async (req, res) => {
         res.status(401).json({ message: ` user with ${_id} not found` });
         return;
     } 
+    
     const hashPassword = await bcrypt.hash(password, 10);
-    const updatedUser = await User.findByIdAndUpdate(_id,
-         {
-         email,
-         name,
-         password:hashPassword, 
-         photo,  
-        }, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(_id, { email, name, password: hashPassword, photo }, { new: true });
+    
     res.status(200).json({
         user: {
-            email: updatedUser.email,
+            _id,
             name: updatedUser.name,
+            email: updatedUser.email,
             password: updatedUser.password,
-            photo: updatedUser.photo,
-            theme: user.theme
+            theme: user.theme,
+            photo: updatedUser.photo
         }
     });
+}
 
+const updateTheme = async (req, res) => {
+    const { theme } = req.body;
+    const { _id } = req.params;
+   
+    await User.findByIdAndUpdate(_id,  {theme:theme}, {new:true} );
+    res.status(200).json({
+        _id,
+        theme
+    })
 }
 
 export default {
     register,
     login,
     logout,
-    update
+    update,
+    updateTheme
 }
