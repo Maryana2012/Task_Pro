@@ -4,6 +4,7 @@ import cors from 'cors';
 
 import mainPageRouter from './routes/mainPageRouter.js';
 import userRouter from './routes/userRouters.js';
+import taskRouter from './routes/taskRouter.js'
 
 // для swagger
 import swaggerUi from "swagger-ui-express";
@@ -18,7 +19,8 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/', mainPageRouter);
-app.use('/users', userRouter)
+app.use('/users', userRouter);
+app.use('/tasks', taskRouter);
 
 
 app.use(
