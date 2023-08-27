@@ -55,7 +55,7 @@ const login = async (req, res) => {
         return;
     } 
     if (user.token) {
-        res.status(401).json({ message: 'This user are logged ' });
+        res.status(401).json({ message: 'This user is logged' });
         return;
     }
 
@@ -86,7 +86,7 @@ const update = async (req, res) => {
     const user = await User.findById(_id);
 
     if (!user) {
-        res.status(401).json({ message: ` user with ${_id} not found` });
+        res.status(401).json({ message: `User with ${_id} not found` });
         return;
     } 
     const hashPassword = await bcrypt.hash(password, 10);

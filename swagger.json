@@ -128,6 +128,26 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/error401"
+                },
+                "examples": {
+                  "!user": {
+                    "description": "",
+                    "value": {
+                      "message": "Email or password wrong"
+                    }
+                  },
+                  "!passwordCompare": {
+                    "description": "",
+                    "value": {
+                      "message": "Email or password wrong"
+                    }
+                  },
+                  "user.token": {
+                    "description": "",
+                    "value": {
+                      "message": "This user is logged"
+                    }
+                  }
                 }
               }
             }
@@ -138,7 +158,7 @@
     "/users/update/:_id": {
       "put": {
         "tags": ["Auth"],
-        "summary": "{ photo, name, email, password }",
+        "summary": "{ name, email, password, thema }",
         "parameters": [
           {
             "in": "path",
@@ -177,6 +197,14 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/error401"
+                },
+                "examples": {
+                  "!user": {
+                    "description": "",
+                    "value": {
+                      "message": "User with _id not found"
+                    }
+                  }
                 }
               }
             }
@@ -198,16 +226,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/res204"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unathorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error401"
                 }
               }
             }
@@ -298,10 +316,6 @@
           "thema": {
             "type": "string",
             "example": "light"
-          },
-          "photo": {
-            "type": "string",
-            "example": "https://en.gravatar.com/etsvsd"
           }
         }
       },
@@ -324,10 +338,6 @@
           "thema": {
             "type": "string",
             "example": "light"
-          },
-          "photo": {
-            "type": "string",
-            "example": "https://en.gravatar.com/"
           }
         }
       },
@@ -358,7 +368,7 @@
         "properties": {
           "message": {
             "type": "string",
-            "example": "<Помилка від Joi або іншої бібліотеки валідації>"
+            "example": "Not authorized"
           }
         }
       },
