@@ -6,7 +6,11 @@ import mainPageRouter from './routes/mainPageRouter.js';
 import userRouter from './routes/userRouters.js';
 import taskRouter from './routes/taskRouter.js'
 
-const app = express()
+// для swagger
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger.json" assert { type: "json" };
+
+const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
@@ -19,6 +23,12 @@ app.use('/users', userRouter);
 app.use('/tasks', taskRouter);
 
 
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument)
+);
+
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
 })
@@ -27,5 +37,6 @@ app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;
   res.status(status).json({ message })
 })
+
 
 export default app;
