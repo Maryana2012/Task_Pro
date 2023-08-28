@@ -3,21 +3,16 @@ import { Schema, model } from 'mongoose';
 const boardSchema = new Schema({
     title: {
         type: String,
-        // required: true,
-        // required: [true, 'Title is required'],
-        // unique: true,
+        unique: true,
     },
     icon: {
         type:String,
-        // required: true,
     },
     background: {
         type: String,
-        // required: true,
     },
     ownerId: {
         type: String,
-        // required: true,
     },
     columns: {
         type: [{

@@ -1,6 +1,7 @@
 import Board from "../models/board.js";
 import HttpError from "../helpers/httpError.js";
 
+
 const getAllBoards = async (req, res, next) => {
   try {
     const { _id } = req.user;
@@ -17,6 +18,7 @@ const getAllBoards = async (req, res, next) => {
   }
 };
 
+
 const getBoard = async (req, res, next) => {
   try {
     const { boardId } = req.params;
@@ -30,12 +32,20 @@ const getBoard = async (req, res, next) => {
   }
 };
 
+
 const addBoard = async (req, res, next) => {
   try {
     const { _id } = req.user;
 
     const { title, icon, background } = req.body;
-    if (!title || !title.trim() || !icon || !icon.trim() || !background || !background.trim()) {
+    if (
+      !title ||
+      !title.trim() ||
+      !icon ||
+      !icon.trim() ||
+      !background ||
+      !background.trim()
+    ) {
       return res.status(400).json({ message: "All fields are required" });
     }
     const result = await Board.create({ ...req.body, ownerId: `${_id}` });
@@ -44,6 +54,7 @@ const addBoard = async (req, res, next) => {
     next(error);
   }
 };
+
 
 const updateBoard = async (req, res, next) => {
   try {
@@ -69,7 +80,9 @@ const updateBoard = async (req, res, next) => {
     }
 
     if (Object.keys(updatedFields).length === 0) {
-      return res.status(400).json({ message: 'At least one field must be different' });
+      return res
+        .status(400)
+        .json({ message: "At least one field must be different" });
     }
 
     const result = await Board.findByIdAndUpdate(boardId, updatedFields, {
@@ -81,6 +94,7 @@ const updateBoard = async (req, res, next) => {
     next(error);
   }
 };
+
 
 const deleteBoard = async (req, res, next) => {
   try {
@@ -97,6 +111,7 @@ const deleteBoard = async (req, res, next) => {
   }
 };
 
+
 const addColumn = async (req, res, next) => {
   try {
     const { boardId } = req.params;
@@ -105,7 +120,7 @@ const addColumn = async (req, res, next) => {
     if (!title || !title.trim()) {
       return res.status(400).json({ message: "Enter the column title" });
     }
-    
+
     const board = await Board.findById(boardId);
 
     const existingColumn = board.columns.find(
@@ -126,6 +141,7 @@ const addColumn = async (req, res, next) => {
   }
 };
 
+
 const updateColumn = async (req, res, next) => {
   try {
     const { boardId, columnId } = req.params;
@@ -134,7 +150,7 @@ const updateColumn = async (req, res, next) => {
     if (!title || !title.trim()) {
       return res.status(400).json({ message: "Title is required" });
     }
-    
+
     const board = await Board.findById(boardId);
 
     const columnIndex = board.columns.findIndex(
@@ -158,23 +174,27 @@ const updateColumn = async (req, res, next) => {
   }
 };
 
+
 const deleteColumn = async (req, res, next) => {
   try {
     const { boardId, columnId } = req.params;
     const board = await Board.findById(boardId);
 
-    const columnIndex = board.columns.findIndex(column => column._id.toString() === columnId);
+    const columnIndex = board.columns.findIndex(
+      (column) => column._id.toString() === columnId
+    );
     if (columnIndex === -1) {
-      return res.status(404).json({ message: 'Column not found' });
+      return res.status(404).json({ message: "Column not found" });
     }
     board.columns.splice(columnIndex, 1);
     await board.save();
 
-    res.status(200).json({ message: 'Column deleted' });
+    res.status(200).json({ message: "Column deleted" });
   } catch (error) {
     next(error);
   }
-}
+};
+
 
 export default {
   getAllBoards,
@@ -184,5 +204,5 @@ export default {
   deleteBoard,
   addColumn,
   updateColumn,
-  deleteColumn
+  deleteColumn,
 };
