@@ -4,7 +4,6 @@ import HttpError from "../helpers/httpError.js";
 
 const getAllBoards = async (req, res, next) => {
   try {
-    console.log("req.user:", req.user);
     const { _id } = req.user;
     const filter = { ownerId: _id };
     const result = await Board.find(filter, {
@@ -104,7 +103,7 @@ const deleteBoard = async (req, res, next) => {
       throw HttpError(404, "Not found");
     }
     res.json({
-      message: `Board deleted`,
+      message: "Board deleted",
     });
   } catch (error) {
     next(error);
@@ -189,7 +188,8 @@ const deleteColumn = async (req, res, next) => {
     board.columns.splice(columnIndex, 1);
     await board.save();
 
-    res.status(200).json({ message: `Column deleted` });
+    res.status(200).json({ message: "Column deleted" });
+
   } catch (error) {
     next(error);
   }
