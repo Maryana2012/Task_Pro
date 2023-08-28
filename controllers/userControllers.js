@@ -85,20 +85,20 @@ const logout = async (req, res) => {
 
 const update = async (req, res) => {
     const { name, email, password, photo } = req.body;
-    const { _id } = req.params;
-    const user = await User.findById(_id);
+    const { id } = req.params;
+    const user = await User.findById(id);
 
     if (!user) {
-        res.status(401).json({ message: `User with ${_id} not found` });
+        res.status(401).json({ message: `User with ${id} not found` });
         return;
     } 
     
     const hashPassword = await bcrypt.hash(password, 10);
-    const updatedUser = await User.findByIdAndUpdate(_id, { email, name, password: hashPassword, photo }, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword, photo }, { new: true });
     
     res.status(200).json({
         user: {
-            id: _id,
+            id: id,
             name: updatedUser.name,
             email: updatedUser.email,
             password: updatedUser.password,
@@ -110,18 +110,19 @@ const update = async (req, res) => {
 
 const updateTheme = async (req, res) => {
     const { theme } = req.body;
-    const { _id } = req.params;
+    const { id } = req.params;
    
-    await User.findByIdAndUpdate(_id,  {theme:theme}, {new:true} );
+    await User.findByIdAndUpdate(id,  {theme:theme}, {new:true} );
     res.status(200).json({
-        id: _id,
+        id,
         theme
     })
 }
 
 const uploadPhoto = async (req, res) => {
   try {
-    const cloudinaryImageUrl = req.file.path;
+      const cloudinaryImageUrl = req.file.path;
+      console.log(cloudinaryImageUrl)
     res.status(200).json({cloudinaryImageUrl});
   } catch (error) {
     console.error(error);
