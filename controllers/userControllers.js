@@ -132,9 +132,9 @@ const uploadPhoto = async (req, res) => {
 
 const updatePhoto = async (req, res) => {
   try {
-    const { _id } = req.params;
+    const { id } = req.params;
     const cloudinaryImageUrl = req.file.path;
-    const updatedUser = await User.findByIdAndUpdate({ _id }, { avatar: cloudinaryImageUrl }, { new: true });
+    const updatedUser = await User.findByIdAndUpdate({ id }, { avatar: cloudinaryImageUrl }, { new: true });
     if (!updatedUser) {
       return res.status(404).json({ message: 'User is not found' });
     }
