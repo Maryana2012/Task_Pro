@@ -22,7 +22,7 @@ const register = async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({...req.body, password: hashPassword, photo: "" });
-
+     console.log(newUser._id)
     const payload = {
         id: newUser._id
     }
@@ -32,7 +32,7 @@ const register = async (req, res) => {
  
     res.status(201).json({
         user: {
-            _id,
+            id: newUser._id,
             name,
             email,
             theme: newUser.theme,
@@ -68,7 +68,7 @@ const login = async (req, res) => {
 
     res.status(200).json({
         user: {
-          _id: user._id,
+          id: user._id,
           email,
           theme: user.theme,
           photo: user.photo
@@ -98,7 +98,7 @@ const update = async (req, res) => {
     
     res.status(200).json({
         user: {
-            _id,
+            id: _id,
             name: updatedUser.name,
             email: updatedUser.email,
             password: updatedUser.password,
@@ -114,7 +114,7 @@ const updateTheme = async (req, res) => {
    
     await User.findByIdAndUpdate(_id,  {theme:theme}, {new:true} );
     res.status(200).json({
-        _id,
+        id: _id,
         theme
     })
 }
