@@ -123,12 +123,14 @@ const updateTheme = async (req, res) => {
 }
 
 const uploadPhoto = async (req, res) => {
-  try {
-      const cloudinaryImageUrl = req.file.path;
-      res.status(200).json({cloudinaryImageUrl});
+  
+  const cloudinaryImageUrl = req.file.path;
+    res.status(200).json({cloudinaryImageUrl});
+
   } catch (error) {
     console.error(error);
-    res.status(404).json({ message: 'Error' });
+      res.status(404).json({ message: 'Error' });
+      return;
   }
 };
 
@@ -136,14 +138,18 @@ const updatePhoto = async (req, res) => {
   try {
     const { id } = req.params;
     const cloudinaryImageUrl = req.file.path;
-    const updatedUser = await User.findByIdAndUpdate({ id }, { avatar: cloudinaryImageUrl }, { new: true });
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'User is not found' });
+
+    const updatedUser = await User.findByIdAndUpdate({ _id }, { photo: cloudinaryImageUrl }, { new: true });
+      if (!updatedUser) {
+      res.status(404).json({ message: 'User is not found' });
+      return;
+
     }
-    res.status(200).json({ message: 'Avatar updated successfully', user: updatedUser });
+    res.status(200).json({ message: 'Photo updated successfully', user: updatedUser });
   } catch (error) {
     console.error(error);
-    res.status(404).json({ message: 'Error' });
+      res.status(404).json({ message: 'Error' });
+      return;
   }
 };
 
