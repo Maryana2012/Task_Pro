@@ -13,8 +13,8 @@ const columnCreate = async (req, res) => {
     console.log(board);
 
     board.columns.push({ title });
-    return board.save();
     console.log(board)
+    return board.save();
 }
 
 

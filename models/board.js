@@ -15,14 +15,14 @@ const boardSchema = new Schema({
         type: String,
         // required: true,
     },
-    owner: {
+    ownerId: {
         type: String,
         // required: true,
     },
     columns: {
         type: [{
             title: String,
-            board: Number,
+            boardId: String,
             tasks: []
           }]
     }
