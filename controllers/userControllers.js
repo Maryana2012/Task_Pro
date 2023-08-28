@@ -1,13 +1,16 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import nodemailer from "nodemailer";
 
 import User from '../models/user.js'
+import createLetter from '../helpers/createLetter.js';
+// import sendLetter from '../helpers/sendLetter.js';
 // import HttpError from "../helpers/httpError.js";
 
 dotenv.config();
 
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, UKR_NET_EMAIL, UKR_NET_PASSWORD } = process.env;
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -78,8 +81,8 @@ const login = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-    const { _id } = req.user;
-    await User.findByIdAndUpdate(_id, { token: "" });
+    const { id } = req.user;
+    await User.findByIdAndUpdate(id, { token: "" });
     res.status(204).json({message: "No content"})
 }
 
@@ -98,7 +101,7 @@ const update = async (req, res) => {
     
     res.status(200).json({
         user: {
-            id: id,
+            id,
             name: updatedUser.name,
             email: updatedUser.email,
             password: updatedUser.password,
@@ -122,8 +125,7 @@ const updateTheme = async (req, res) => {
 const uploadPhoto = async (req, res) => {
   try {
       const cloudinaryImageUrl = req.file.path;
-      console.log(cloudinaryImageUrl)
-    res.status(200).json({cloudinaryImageUrl});
+      res.status(200).json({cloudinaryImageUrl});
   } catch (error) {
     console.error(error);
     res.status(404).json({ message: 'Error' });
@@ -145,6 +147,40 @@ const updatePhoto = async (req, res) => {
   }
 };
 
+
+const letter = async (req, res) => {
+    const {email , text} = req.body;
+   
+    const letter = createLetter(email, text);
+    
+    const nodemailerConfig = {
+        host: "smtp.ukr.net",
+        port: 465,
+        secure: true,
+        auth: {
+           user: UKR_NET_EMAIL,
+           pass: UKR_NET_PASSWORD
+        }
+    }
+    const transport = nodemailer.createTransport(nodemailerConfig);
+    const emailConfig = {
+        from: UKR_NET_EMAIL,
+        to: "taskpro.gmail@gmail.com",
+        subject: "helper letter",
+        html: `<p>${text}</p><p>Send answer to email ${email}</p>`
+    }
+    
+    transport.sendMail(emailConfig)
+        .then(() => {
+            res.status(200).json({message: "Letter sent"})
+        })
+        .catch((error) => {
+            res.status(400).json({ message: error });
+        })
+}
+
+
+
 export default {
     register,
     login,
@@ -153,4 +189,5 @@ export default {
     updateTheme,
     uploadPhoto,
     updatePhoto,
+    letter
 }

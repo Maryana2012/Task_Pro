@@ -19,4 +19,6 @@ userRouter.post('/:id/avatar', userValidators.authenticate, uploadCloud.single('
 
 userRouter.patch('/:id/avatar', userValidators.authenticate, uploadCloud.single('cloudinaryImageUrl'), userControllers.updatePhoto);
 
+userRouter.post('/letter',  userValidators.isEmptyBody, userValidators.authenticate, userControllers.letter )
+
 export default userRouter;
