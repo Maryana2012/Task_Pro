@@ -1,13 +1,16 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import nodemailer from "nodemailer";
 
 import User from '../models/user.js'
+import createLetter from '../helpers/createLetter.js';
+// import sendLetter from '../helpers/sendLetter.js';
 // import HttpError from "../helpers/httpError.js";
 
 dotenv.config();
 
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, UKR_NET_EMAIL, UKR_NET_PASSWORD } = process.env;
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -22,7 +25,7 @@ const register = async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({...req.body, password: hashPassword, photo: "" });
-
+     console.log(newUser._id)
     const payload = {
         id: newUser._id
     }
@@ -32,7 +35,7 @@ const register = async (req, res) => {
  
     res.status(201).json({
         user: {
-            _id,
+            id: newUser._id,
             name,
             email,
             theme: newUser.theme,
@@ -68,7 +71,7 @@ const login = async (req, res) => {
 
     res.status(200).json({
         user: {
-          _id: user._id,
+          id: user._id,
           email,
           theme: user.theme,
           photo: user.photo
@@ -78,27 +81,27 @@ const login = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-    const { _id } = req.user;
-    await User.findByIdAndUpdate(_id, { token: "" });
+    const { id } = req.user;
+    await User.findByIdAndUpdate(id, { token: "" });
     res.status(204).json({message: "No content"})
 }
 
 const update = async (req, res) => {
     const { name, email, password, photo } = req.body;
-    const { _id } = req.params;
-    const user = await User.findById(_id);
+    const { id } = req.params;
+    const user = await User.findById(id);
 
     if (!user) {
-        res.status(401).json({ message: `User with ${_id} not found` });
+        res.status(401).json({ message: `User with ${id} not found` });
         return;
     } 
     
     const hashPassword = await bcrypt.hash(password, 10);
-    const updatedUser = await User.findByIdAndUpdate(_id, { email, name, password: hashPassword, photo }, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword, photo }, { new: true });
     
     res.status(200).json({
         user: {
-            _id,
+            id,
             name: updatedUser.name,
             email: updatedUser.email,
             password: updatedUser.password,
@@ -110,19 +113,81 @@ const update = async (req, res) => {
 
 const updateTheme = async (req, res) => {
     const { theme } = req.body;
-    const { _id } = req.params;
+    const { id } = req.params;
    
-    await User.findByIdAndUpdate(_id,  {theme:theme}, {new:true} );
+    await User.findByIdAndUpdate(id,  {theme:theme}, {new:true} );
     res.status(200).json({
-        _id,
+        id,
         theme
     })
 }
+
+const uploadPhoto = async (req, res) => {
+  try {
+      const cloudinaryImageUrl = req.file.path;
+      res.status(200).json({cloudinaryImageUrl});
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ message: 'Error' });
+  }
+};
+
+const updatePhoto = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cloudinaryImageUrl = req.file.path;
+    const updatedUser = await User.findByIdAndUpdate({ id }, { avatar: cloudinaryImageUrl }, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User is not found' });
+    }
+    res.status(200).json({ message: 'Avatar updated successfully', user: updatedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ message: 'Error' });
+  }
+};
+
+
+const letter = async (req, res) => {
+    const {email , text} = req.body;
+   
+    const letter = createLetter(email, text);
+    
+    const nodemailerConfig = {
+        host: "smtp.ukr.net",
+        port: 465,
+        secure: true,
+        auth: {
+           user: UKR_NET_EMAIL,
+           pass: UKR_NET_PASSWORD
+        }
+    }
+    const transport = nodemailer.createTransport(nodemailerConfig);
+    const emailConfig = {
+        from: UKR_NET_EMAIL,
+        to: "taskpro.gmail@gmail.com",
+        subject: "helper letter",
+        html: `<p>${text}</p><p>Send answer to email ${email}</p>`
+    }
+    
+    transport.sendMail(emailConfig)
+        .then(() => {
+            res.status(200).json({message: "Letter sent"})
+        })
+        .catch((error) => {
+            res.status(400).json({ message: error });
+        })
+}
+
+
 
 export default {
     register,
     login,
     logout,
     update,
-    updateTheme
+    updateTheme,
+    uploadPhoto,
+    updatePhoto,
+    letter
 }

@@ -17,11 +17,6 @@ const columnCreate = async (req, res) => {
     return board.save();
 }
 
-
-
-
-
-
 export default {
     boardCreate,
     columnCreate

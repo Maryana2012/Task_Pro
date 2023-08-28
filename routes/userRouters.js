@@ -1,7 +1,7 @@
 import express from 'express';
-
 import userControllers from '../controllers/userControllers.js';
 import userValidators from '../middlewars/user/userValidators.js'
+import uploadCloud from '../middlewars/user/cloudinary.js'
 
 const userRouter = express.Router();
 
@@ -11,8 +11,14 @@ userRouter.post('/login', userValidators.isEmptyBody, userValidators.userLoginVa
 
 userRouter.post('/logout', userValidators.authenticate, userControllers.logout);
 
-userRouter.put('/update/:_id', userValidators.isEmptyBody, userValidators.isValidId, userControllers.update);
+userRouter.put('/:id/update', userValidators.isEmptyBody, userValidators.isValidId, userControllers.update);
 
-userRouter.patch('/:_id/theme',userValidators.isEmptyBody, userValidators.isTheme, userControllers.updateTheme)
+userRouter.patch('/:id/theme', userValidators.isEmptyBody, userValidators.isValidId, userValidators.isTheme, userControllers.updateTheme);
+
+userRouter.post('/:id/avatar', userValidators.authenticate, uploadCloud.single('cloudinaryImageUrl'), userControllers.uploadPhoto);
+
+userRouter.patch('/:id/avatar', userValidators.authenticate, uploadCloud.single('cloudinaryImageUrl'), userControllers.updatePhoto);
+
+userRouter.post('/letter',  userValidators.isEmptyBody, userValidators.authenticate, userControllers.letter )
 
 export default userRouter;

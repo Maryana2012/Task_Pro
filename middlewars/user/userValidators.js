@@ -81,9 +81,9 @@ const authenticate = async (req, res, next) => {
 }
 
 const isValidId = (req, res, next) => {
-    const {_id } = req.params;
-    if (!isValidObjectId(_id)) {
-        return next( res.status(404).json({message: `${_id} is not valid`}));
+    const {id } = req.params;
+    if (!isValidObjectId(id)) {
+        return next( res.status(404).json({message: `${id} is not valid`}));
     }
     next();
 }

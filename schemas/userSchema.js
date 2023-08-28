@@ -13,13 +13,17 @@ const userLoginSchema = Joi.object({
     password: Joi.string().required(),
 });
 
-
 const userThemeSchema = Joi.object({
     theme: Joi.string().valid('dark', 'light', 'violet').required()
-})
+});
+
+// const userAvatarSchema = Joi.object({
+//     photo: Joi.string().valid('avatar').required()
+// });
     
 export default {
     userRegisterSchema,
     userLoginSchema,
-    userThemeSchema
+    userThemeSchema,
+    // userAvatarSchema
 }

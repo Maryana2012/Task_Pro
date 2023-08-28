@@ -28,6 +28,5 @@ const boardSchema = new Schema({
 //     }
 // })
 
-
 export const Board = model('tasks', boardSchema);
 // export const Column = model('task', columnsSchema)
