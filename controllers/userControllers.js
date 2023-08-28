@@ -121,7 +121,7 @@ const updateTheme = async (req, res) => {
 
 const uploadPhoto = async (req, res) => {
   try {
-    const cloudinaryImageUrl = req.file.path;
+  const cloudinaryImageUrl = req.file.path;
     res.status(200).json({cloudinaryImageUrl});
   } catch (error) {
     console.error(error);
