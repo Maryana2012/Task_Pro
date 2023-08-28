@@ -15,10 +15,10 @@ boardsRouter.put("/:boardId", userValidators.authenticate, boardsController.upda
 
 boardsRouter.delete("/:boardId", userValidators.authenticate, boardsController.deleteBoard);
 
-// boardsRouter.post('/:boardId/columns', boardsController.addColumnInBoard);
+boardsRouter.post('/:boardId/columns', userValidators.authenticate, boardsController.addColumn);
 
-// boardsRouter.patch('/:boardId/columns/:columnId', boardsController.updateColumnInBoard);
+boardsRouter.patch('/:boardId/columns/:columnId', userValidators.authenticate, boardsController.updateColumn);
 
-// boardsRouter.delete('/:boardId/columns/:columnId', boardsController.deleteColumnInBoard);
+boardsRouter.delete('/:boardId/columns/:columnId', userValidators.authenticate, boardsController.deleteColumn);
 
 export default boardsRouter;
