@@ -29,4 +29,16 @@ const boardSchema = new Schema({
 // })
 
 export const Board = model('tasks', boardSchema);
+
+const taskSchema = new Schema({
+  boardId: String,
+  columnId: String,
+  title: String,
+  text: String,
+  priority: String,
+  deadline: Date
+});
+
+export const Task = model('Task', taskSchema);
+
 // export const Column = model('task', columnsSchema)
