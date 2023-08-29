@@ -1,5 +1,7 @@
 import express from 'express';
-import taskControllers from '../controllers/taskControllers.js' 
+import taskControllers from '../controllers/taskControllers.js';
+
+import userValidators from '../middlewars/user/userValidators.js';
 
 const taskRouter = express.Router();
 
