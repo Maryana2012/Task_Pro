@@ -1,13 +1,10 @@
 import express from 'express';
+
 import taskControllers from '../controllers/taskControllers.js';
 
 import userValidators from '../middlewars/user/userValidators.js';
 
 const taskRouter = express.Router();
-
-taskRouter.post('/board', taskControllers.boardCreate);
-
-taskRouter.post('/board/:_id/column', taskControllers.columnCreate);
 
 // Маршрут для отримання всіх тасків на дошці
 taskRouter.get("/", userValidators.authenticate, taskControllers.getAllTasks);
@@ -25,8 +22,6 @@ taskRouter.delete("/:taskId", userValidators.authenticate, taskControllers.delet
 taskRouter.patch("/:taskId/move/:newColumnId", userValidators.authenticate, taskControllers.moveTask);
 
 // Маршрут фільтрації тасок з певним пріоритетом на дошці
-taskRouter.get("/priority/:priority", userValidators.authenticate, taskControllers.getTasksByPriority);
-
-
+taskRouter.get("/:boardId/:priority", userValidators.authenticate, taskControllers.getTasksByPriority);
 
 export default taskRouter;
