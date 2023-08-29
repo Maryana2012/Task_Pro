@@ -12,7 +12,6 @@ const { SECRET_KEY } = process.env;
 const isEmptyBody = (req, res, next) => {
     const keys = Object.keys(req.body);
      if (keys.length === 0) {
-        // throw HttpError(400, `missing fields`);
        res.status(400).json({ message: 'missing fields' });
        return
     }
@@ -23,11 +22,9 @@ const userRegisterValidator = (req, res, next) => {
   const { error } = userSchema.userRegisterSchema.validate(req.body);
    if (error) {
       if (error.details[0].type === "any.required") {
-        // throw HttpError(400, `missing required ${error.details[0].path[0]} field`); 
         res.status(400).json({ message: `missing required ${error.details[0].path[0]} field` });
         return;
       } else if (error.details[0].type.includes('base')) {
-        // throw HttpError(400, error.message); 
         res.status(400).json( message.error );
         return;
       }
@@ -42,9 +39,7 @@ const userLoginValidator = (req, res, next) => {
          console.log('error')
            res.status(400).json({ message: `missing required ${error.details[0].path[0]} field` });
            return;
-        // throw HttpError(400, `missing required ${error.details[0].path[0]} field`); 
-      } else if (error.details[0].type.includes('base')) {
-        // throw HttpError(400, error.message); 
+        } else if (error.details[0].type.includes('base')) {
            res.status(400).json( message.error);
            return;
       }
@@ -56,7 +51,6 @@ const authenticate = async (req, res, next) => {
     const { authorization = ""} = req.headers;
     const [bearer, token] = authorization.split(" ");
     if (bearer !== "Bearer") {
-        // throw HttpError(401, `Not authorized`);
         res.status(401).json({ message: `Not authorized` });
         return;
     }
@@ -65,7 +59,6 @@ const authenticate = async (req, res, next) => {
         const user = await User.findById(id);
        
         if (!user || !user.token) {
-            // throw HttpError(401, `Not authorized`);
             res.status(401).json({ message: `Not authorized` });
             return;
       }
@@ -73,11 +66,9 @@ const authenticate = async (req, res, next) => {
         next();
     }
     catch (error) {
-        // throw HttpError(401, `Not authorized`);
         res.status(401).json({ message: `Not authorized` });
         return;
     }
-
 }
 
 const isValidId = (req, res, next) => {
@@ -96,11 +87,33 @@ const isTheme = (req, res, next) => {
   }
   next();
 }
+
+const userUpdateValidator = (req, res, next) => {
+  const { error } = userSchema.userUpdateSchema.validate(req.body);
+  if (error) {
+    res.status(400).json({ message: 'select theme from [dark, light, violet]' });
+    return;
+  }
+  next();
+}
+
+const userUpdatePhoto = (req, res, next) => {
+  const { error } = userSchema.userPhotoSchema.validate(req);
+  if (error) {
+    res.status(400).json({ message: error.message  });
+    return;
+  }
+  next();
+}
+
+
 export default {
   isEmptyBody,
   userRegisterValidator,
   userLoginValidator,
   authenticate,
   isValidId,
-  isTheme
+  isTheme,
+  userUpdateValidator,
+  userUpdatePhoto
 }

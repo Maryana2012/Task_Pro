@@ -11,9 +11,9 @@ userRouter.post('/login', userValidators.isEmptyBody, userValidators.userLoginVa
 
 userRouter.post('/logout', userValidators.authenticate, userControllers.logout);
 
-userRouter.put('/:id/update', userValidators.isEmptyBody, userValidators.isValidId, userControllers.update);
+userRouter.put('/:id/update', userValidators.isEmptyBody,  userValidators.authenticate, userValidators.isValidId, userValidators.userUpdateValidator,  userControllers.update);
 
-userRouter.patch('/:id/theme', userValidators.isEmptyBody, userValidators.isValidId, userValidators.isTheme, userControllers.updateTheme);
+userRouter.patch('/:id/theme', userValidators.isEmptyBody,  userValidators.authenticate, userValidators.isValidId, userValidators.isTheme, userControllers.updateTheme);
 
 userRouter.post('/:_id/avatar', userValidators.authenticate, uploadCloud.single('photo'), userControllers.uploadPhoto);
 

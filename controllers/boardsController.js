@@ -36,7 +36,6 @@ const getBoard = async (req, res, next) => {
 const addBoard = async (req, res, next) => {
   try {
     const { _id } = req.user;
-
     const { title, icon, background } = req.body;
     if (
       !title ||
@@ -148,7 +147,7 @@ const updateColumn = async (req, res, next) => {
 
     const { title } = req.body;
     if (!title || !title.trim()) {
-      return res.status(400).json({ message: "Title is required" });
+      return res.status(400).json({ message: "Enter the column title" });
     }
 
     const board = await Board.findById(boardId);
@@ -190,6 +189,7 @@ const deleteColumn = async (req, res, next) => {
     await board.save();
 
     res.status(200).json({ message: "Column deleted" });
+
   } catch (error) {
     next(error);
   }
