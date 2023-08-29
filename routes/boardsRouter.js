@@ -9,9 +9,9 @@ const boardsRouter = express.Router();
 
 boardsRouter.get("/", userValidators.authenticate,  boardsController.getAllBoards);
 
-boardsRouter.get("/:boardId", userValidators.authenticate, boardsController.getBoard);
-
 boardsRouter.post("/", userValidators.authenticate, validateBody(boardsSchemas.addBoardSchema), boardsController.addBoard);
+
+boardsRouter.get("/:boardId", userValidators.authenticate, boardsController.getBoard);
 
 boardsRouter.put("/:boardId", userValidators.authenticate, boardsController.updateBoard);
 
