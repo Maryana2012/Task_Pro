@@ -15,7 +15,9 @@ userRouter.put('/:id/update', userValidators.isEmptyBody,  userValidators.authen
 
 userRouter.patch('/:id/theme', userValidators.isEmptyBody,  userValidators.authenticate, userValidators.isValidId, userValidators.isTheme, userControllers.updateTheme);
 
-userRouter.patch('/:id/photo', userValidators.userUpdatePhoto,  userValidators.authenticate, uploadCloud.single('photo'), userControllers.updatePhoto);
+userRouter.post('/:_id/avatar', userValidators.authenticate, uploadCloud.single('photo'), userControllers.uploadPhoto);
+
+userRouter.patch('/:_id/avatar', userValidators.authenticate, uploadCloud.single('photo'), userControllers.updatePhoto);
 
 userRouter.post('/letter',  userValidators.isEmptyBody, userValidators.authenticate, userControllers.letter )
 
