@@ -4,9 +4,6 @@ import dotenv from 'dotenv';
 import nodemailer from "nodemailer";
 
 import User from '../models/user.js'
-// import createLetter from '../helpers/createLetter.js';
-// import sendLetter from '../helpers/sendLetter.js';
-// import HttpError from "../helpers/httpError.js";
 
 dotenv.config();
 
