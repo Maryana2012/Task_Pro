@@ -96,11 +96,33 @@ const isTheme = (req, res, next) => {
   }
   next();
 }
+
+const userUpdateValidator = (req, res, next) => {
+  const { error } = userSchema.userUpdateSchema.validate(req.body);
+  if (error) {
+    res.status(400).json({ message: 'select theme from [dark, light, violet]' });
+    return;
+  }
+  next();
+}
+
+const userUpdatePhoto = (req, res, next) => {
+  const { error } = userSchema.userPhotoSchema.validate(req.body);
+  if (error) {
+    res.status(400).json({ message: error.message  });
+    return;
+  }
+  next();
+}
+
+
 export default {
   isEmptyBody,
   userRegisterValidator,
   userLoginValidator,
   authenticate,
   isValidId,
-  isTheme
+  isTheme,
+  userUpdateValidator,
+  userUpdatePhoto
 }

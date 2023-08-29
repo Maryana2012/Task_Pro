@@ -11,14 +11,12 @@ userRouter.post('/login', userValidators.isEmptyBody, userValidators.userLoginVa
 
 userRouter.post('/logout', userValidators.authenticate, userControllers.logout);
 
-userRouter.put('/:id/update', userValidators.isEmptyBody, userValidators.isValidId, userControllers.update);
+userRouter.put('/:id/update', userValidators.isEmptyBody, userValidators.isValidId, userValidators.userUpdateValidator,  userControllers.update);
 
 userRouter.patch('/:id/theme', userValidators.isEmptyBody, userValidators.isValidId, userValidators.isTheme, userControllers.updateTheme);
 
+userRouter.patch('/:id/photo', userValidators.userUpdatePhoto, uploadCloud.single('photo'), userControllers.updatePhoto);
 
-userRouter.post('/:_id/avatar', userValidators.authenticate, uploadCloud.single('photo'), userControllers.uploadPhoto);
-
-userRouter.patch('/:_id/avatar', userValidators.authenticate, uploadCloud.single('photo'), userControllers.updatePhoto);
 userRouter.post('/letter',  userValidators.isEmptyBody, userValidators.authenticate, userControllers.letter )
 
 

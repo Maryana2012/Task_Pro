@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import nodemailer from "nodemailer";
 
 import User from '../models/user.js'
-import createLetter from '../helpers/createLetter.js';
+// import createLetter from '../helpers/createLetter.js';
 // import sendLetter from '../helpers/sendLetter.js';
 // import HttpError from "../helpers/httpError.js";
 
@@ -95,7 +95,7 @@ const update = async (req, res) => {
         res.status(401).json({ message: `User with ${id} not found` });
         return;
     } 
-    
+ 
     const hashPassword = await bcrypt.hash(password, 10);
     const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword, photo }, { new: true });
     
@@ -122,33 +122,22 @@ const updateTheme = async (req, res) => {
     })
 }
 
-const uploadPhoto = async (req, res) => {
-  
-  const cloudinaryImageUrl = req.file.path;
-    res.status(200).json({cloudinaryImageUrl});
-
-  } catch (error) {
-    console.error(error);
-      res.status(404).json({ message: 'Error' });
-      return;
-  }
-};
 
 const updatePhoto = async (req, res) => {
   try {
-    const { id } = req.params;
-    const cloudinaryImageUrl = req.file.path;
+      const { id } = req.params;
+      console.log(id)
+      const cloudinaryImageUrl = req.file.path;
+      console.log(cloudinaryImageUrl)
 
-    const updatedUser = await User.findByIdAndUpdate({ _id }, { photo: cloudinaryImageUrl }, { new: true });
-      if (!updatedUser) {
-      res.status(404).json({ message: 'User is not found' });
-      return;
-
-    }
-    res.status(200).json({ message: 'Photo updated successfully', user: updatedUser });
+    const updatedUser = await User.findByIdAndUpdate( id , { photo: cloudinaryImageUrl }, { new: true });
+      res.status(200).json({
+          id,
+          photo: updatedUser.photo
+      })
   } catch (error) {
     console.error(error);
-      res.status(404).json({ message: 'Error' });
+      res.status(404).json({ message: message.error });
       return;
   }
 };
@@ -156,9 +145,7 @@ const updatePhoto = async (req, res) => {
 
 const letter = async (req, res) => {
     const {email , text} = req.body;
-   
-    const letter = createLetter(email, text);
-    
+      
     const nodemailerConfig = {
         host: "smtp.ukr.net",
         port: 465,
@@ -193,7 +180,7 @@ export default {
     logout,
     update,
     updateTheme,
-    uploadPhoto,
+    // uploadPhoto,
     updatePhoto,
     letter
 }
