@@ -1,22 +1,5 @@
-import { Board } from '../models/task.js';
 import { Task } from '../models/task.js';
 
-const boardCreate = async (req, res) => {
-    const { title, icon, background } = req.body;
-    const newBoard = await Board.create({...req.body})
-
-}
-
-const columnCreate = async (req, res) => {
-    const { _id } = req.params;
-    const { title } = req.body;
-    const board = await Board.findById(_id);
-    console.log(board);
-
-    board.columns.push({ title });
-    console.log(board)
-    return board.save();
-}
 
 const getAllTasks = async (req, res) => {
   try {
@@ -116,12 +99,12 @@ const deleteTask = async (req, res) => {
     const { taskId } = req.params;
 
     const task = await Task.findById(taskId);
-
+    console.log(task)
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    await task.remove();
+    await Task.findByIdAndDelete(taskId);
 
     const formattedTask = {
       boardId: task.boardId,
@@ -136,7 +119,7 @@ const deleteTask = async (req, res) => {
     return res.status(200).json(formattedTask);
   } catch (error) {
     console.error(error);
-    return res.status(404).json({ message: 'Error' });
+    return res.status(404).json({ message: error.message });
   }
 }
 
@@ -195,8 +178,6 @@ const getTasksByPriority = async (req, res) => {
 };
 
 export default {
-    boardCreate,
-    columnCreate,
     getAllTasks,
     addTask,
     updateTask,
@@ -204,3 +185,5 @@ export default {
     moveTask,
     getTasksByPriority
 };
+
+
