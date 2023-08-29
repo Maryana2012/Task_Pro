@@ -119,17 +119,6 @@ const updateTheme = async (req, res) => {
     })
 }
 
-const uploadPhoto = async (req, res) => {
-  
-  const cloudinaryImageUrl = req.file.path;
-  res.status(200).json({cloudinaryImageUrl});
-  catch (error) {
-    console.error(error);
-      res.status(404).json({ message: 'Error' });
-      return;
-  }
-};
-
 const updatePhoto = async (req, res) => {
   try {
       const { id } = req.params;
