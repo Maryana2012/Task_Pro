@@ -22,7 +22,7 @@ const register = async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({...req.body, password: hashPassword, photo: "" });
-     console.log(newUser._id)
+    
     const payload = {
         id: newUser._id
     }
@@ -82,6 +82,13 @@ const logout = async (req, res) => {
     await User.findByIdAndUpdate(id, { token: "" });
     res.status(204).json({message: "No content"})
 }
+
+const current = (req, res) => {
+    const { email } = req.user;
+    res.json({
+        email
+    })
+};
 
 const update = async (req, res) => {
     const { name, email, password, photo } = req.body;
@@ -154,7 +161,7 @@ const letter = async (req, res) => {
     const transport = nodemailer.createTransport(nodemailerConfig);
     const emailConfig = {
         from: UKR_NET_EMAIL,
-        to: "taskpro.gmail@gmail.com",
+        to: "taskpro.project@gmail.com",
         subject: "helper letter",
         html: `<p>${text}</p><p>Send answer to email ${email}</p>`
     }
@@ -168,12 +175,11 @@ const letter = async (req, res) => {
         })
 }
 
-
-
 export default {
     register,
     login,
     logout,
+    current,
     update,
     updateTheme,
     // uploadPhoto,

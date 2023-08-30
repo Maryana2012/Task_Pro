@@ -1,179 +1,95 @@
 import { Task } from '../models/task.js';
 
-
+// ok
 const getAllTasks = async (req, res) => {
   try {
-    const { boardId } = req.query;
+    const { boardId } = req.body;
 
-    const tasks = await Task.find({ boardId });
-      
-    const formattedTasks = tasks.map(task => ({
-      boardId: task.boardId,
-      columnId: task.columnId,
-      title: task.title,
-      text: task.text,
-      priority: task.priority,
-      deadline: task.deadline,
-      _id: task._id
-    }));
-
-    return res.status(200).json(formattedTasks);
-  } catch (error) {
-    console.error(error);
-    return res.status(404).json({ message: 'Error' });
+    const tasks = await Task.find( {boardId} );
+    res.status(200).json(tasks);
+  }
+  catch (error) {
+    return res.status(404).json({ message: error.message });
   }
 }
 
+// ok 
 const addTask = async (req, res) => {
   try {
-    const { title, text, priority, deadline, boardId, columnId } = req.body;
-
-    const newTask = new Task({
-      boardId,
-      columnId,
-      title,
-      text,
-      priority,
-      deadline
-    });
-
-    const savedTask = await newTask.save();
-
-    const formattedTask = {
-      boardId: savedTask.boardId,
-      columnId: savedTask.columnId,
-      title: savedTask.title,
-      text: savedTask.text,
-      priority: savedTask.priority,
-      deadline: savedTask.deadline,
-      _id: savedTask._id
-    };
-
-    return res.status(201).json(formattedTask);
+     const newTask = await Task.create({...req.body})
+     res.status(201).json(newTask);
   } catch (error) {
-    console.error(error);
-    return res.status(404).json({ message: 'Error' });
+    return res.status(404).json({ message: error.message });
   }
 }
 
+// ok
 const updateTask = async (req, res) => {
   try {
+    const { taskId } = req.params;
     const { title, text, priority, deadline, boardId, columnId } = req.body;
-    
-    const { taskId } = req.params;
 
     const task = await Task.findById(taskId);
-
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
+    const updateTask = await Task.findByIdAndUpdate(taskId, {...req.body }, {new:true})
+    res.status(200).json(updateTask);
 
-    task.boardId = boardId;
-    task.columnId = columnId;
-    task.title = title;
-    task.text = text;
-    task.priority = priority;
-    task.deadline = deadline;
-
-    const updatedTask = await task.save();
-
-    const formattedTask = {
-      boardId: updatedTask.boardId,
-      columnId: updatedTask.columnId,
-      title: updatedTask.title,
-      text: updatedTask.text,
-      priority: updatedTask.priority,
-      deadline: updatedTask.deadline,
-      _id: updatedTask._id
-    }
-
-    return res.status(200).json(formattedTask);
-  } catch (error) {
-    console.error(error);
-    return res.status(404).json({ message: 'Error' });
-  }
-}
-
-const deleteTask = async (req, res) => {
-  try {
-    const { taskId } = req.params;
-
-    const task = await Task.findById(taskId);
-    console.log(task)
-    if (!task) {
-      return res.status(404).json({ message: 'Task not found' });
-    }
-
-    await Task.findByIdAndDelete(taskId);
-
-    const formattedTask = {
-      boardId: task.boardId,
-      columnId: task.columnId,
-      title: task.title,
-      text: task.text,
-      priority: task.priority,
-      deadline: task.deadline,
-      _id: task._id
-    };
-
-    return res.status(200).json(formattedTask);
   } catch (error) {
     console.error(error);
     return res.status(404).json({ message: error.message });
   }
 }
 
-const moveTask = async (req, res) => {
+// ok
+const deleteTask = async (req, res) => {
   try {
-    const { taskId, newColumnId } = req.params;
+    const { taskId } = req.params;
 
     const task = await Task.findById(taskId);
 
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
-      }
-      
-    task.columnId = newColumnId;
+    }
+    await Task.findByIdAndDelete(taskId);
 
-    const updatedTask = await task.save();
-
-    const formattedTask = {
-      boardId: updatedTask.boardId,
-      columnId: updatedTask.columnId,
-      title: updatedTask.title,
-      text: updatedTask.text,
-      priority: updatedTask.priority,
-      deadline: updatedTask.deadline,
-      _id: updatedTask._id
-    };
-
-    return res.status(200).json(formattedTask);
+    res.status(200).json(task);
   } catch (error) {
-    console.error(error);
-    return res.status(404).json({ message: 'Error' });
+    return res.status(404).json({ message: error.message });
   }
 }
 
+// ok
+const moveTask = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const { newColumnId } = req.body;
+
+    const task = await Task.findById(taskId);
+
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    const updateTask = await Task.findByIdAndUpdate(taskId, { columnId: newColumnId }, { new: true });
+
+    res.status(200).json(updateTask);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
+  }
+}
+
+// ok
 const getTasksByPriority = async (req, res) => {
   try {
-    const { boardId, priority } = req.query;
+    const { boardId, priority } = req.body;
       
     const filteredTasks = await Task.find({ boardId, priority });
-
-    const formattedTasks = filteredTasks.map(task => ({
-      boardId: task.boardId,
-      columnId: task.columnId,
-      title: task.title,
-      text: task.text,
-      priority: task.priority,
-      deadline: task.deadline,
-      _id: task._id
-    }));
-
-    return res.status(200).json(formattedTasks);
+    
+    res.status(200).json(filteredTasks);
   } catch (error) {
     console.error(error);
-    return res.status(404).json({ message: 'Error' });
+    return res.status(404).json({ message: error.message });
   }
 };
 

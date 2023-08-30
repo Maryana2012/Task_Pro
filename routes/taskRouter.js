@@ -1,27 +1,21 @@
 import express from 'express';
 
 import taskControllers from '../controllers/taskControllers.js';
-
 import userValidators from '../middlewars/user/userValidators.js';
+import taskValidators from '../middlewars/tasks/taskValidators.js';
 
 const taskRouter = express.Router();
 
-// Маршрут для отримання всіх тасків на дошці
-taskRouter.get("/", userValidators.authenticate, taskControllers.getAllTasks);
+taskRouter.get("/", userValidators.authenticate, userValidators.isEmptyBody, taskControllers.getAllTasks);
 
-// Маршрут для додавання нового таска на дошку
-taskRouter.post("/", userValidators.authenticate, taskControllers.addTask);
+taskRouter.post("/", userValidators.authenticate, userValidators.isEmptyBody, taskValidators.taskValidator, taskControllers.addTask);
 
-// Маршрут для оновлення інформації про таск
-taskRouter.put("/:taskId", userValidators.authenticate, taskControllers.updateTask);
+taskRouter.put("/:taskId", userValidators.authenticate, userValidators.isEmptyBody, taskValidators.taskValidator, taskControllers.updateTask);
 
-// Маршрут для видалення таска з дошки
 taskRouter.delete("/:taskId", userValidators.authenticate, taskControllers.deleteTask);
 
-// Маршрут для переміщення таски в іншу колонку
-taskRouter.patch("/:taskId/move/:newColumnId", userValidators.authenticate, taskControllers.moveTask);
+taskRouter.patch("/:taskId/move", userValidators.authenticate, userValidators.isEmptyBody, taskValidators.moveTask, taskControllers.moveTask);
 
-// Маршрут фільтрації тасок з певним пріоритетом на дошці
-taskRouter.get("/:boardId/:priority", userValidators.authenticate, taskControllers.getTasksByPriority);
+taskRouter.get("/filter", userValidators.authenticate, userValidators.isEmptyBody, taskValidators.isPriority, taskControllers.getTasksByPriority);
 
 export default taskRouter;

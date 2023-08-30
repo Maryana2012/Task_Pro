@@ -11,6 +11,8 @@ userRouter.post('/login', userValidators.isEmptyBody, userValidators.userLoginVa
 
 userRouter.post('/logout', userValidators.authenticate, userControllers.logout);
 
+userRouter.get('/current', userValidators.authenticate, userControllers.current);
+
 userRouter.put('/:id/update', userValidators.isEmptyBody, userValidators.isValidId, userValidators.userUpdateValidator,  userControllers.update);
 
 userRouter.patch('/:id/theme', userValidators.isEmptyBody, userValidators.isValidId, userValidators.isTheme, userControllers.updateTheme);
