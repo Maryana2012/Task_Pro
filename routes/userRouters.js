@@ -17,7 +17,7 @@ userRouter.put('/:id/update', userValidators.isEmptyBody, userValidators.isValid
 
 userRouter.patch('/:id/theme', userValidators.isEmptyBody, userValidators.isValidId, userValidators.isTheme, userControllers.updateTheme);
 
-userRouter.patch('/:id/photo',userValidators.userUpdatePhoto, uploadCloud.single('photo'), userControllers.updatePhoto);
+// userRouter.patch('/:id/photo',userValidators.userUpdatePhoto, uploadCloud.single('photo'), userControllers.updatePhoto);
 
 userRouter.post('/letter',  userValidators.isEmptyBody, userControllers.letter )
 

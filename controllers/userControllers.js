@@ -91,17 +91,18 @@ const current = (req, res) => {
 };
 
 const update = async (req, res) => {
-    const { name, email, password, photo } = req.body;
     const { id } = req.params;
+    const { name, email, password } = req.body;
+    const cloudinaryImageUrl = req.file.path;
+   
     const user = await User.findById(id);
 
     if (!user) {
         res.status(401).json({ message: `User with ${id} not found` });
         return;
     } 
- 
     const hashPassword = await bcrypt.hash(password, 10);
-    const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword, photo }, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword, photo: cloudinaryImageUrl}, { new: true });
     
     res.status(200).json({
         user: {
@@ -126,24 +127,23 @@ const updateTheme = async (req, res) => {
     })
 }
 
-const updatePhoto = async (req, res) => {
-  try {
-      const { id } = req.params;
-      console.log(id)
-      const cloudinaryImageUrl = req.file.path;
-      console.log(cloudinaryImageUrl)
+// const updatePhoto = async (req, res) => {
+//   try {
+//       const { id } = req.params;
+//      const cloudinaryImageUrl = req.file.path;
+//       console.log(cloudinaryImageUrl)
 
-    const updatedUser = await User.findByIdAndUpdate( id , { photo: cloudinaryImageUrl }, { new: true });
-      res.status(200).json({
-          id,
-          photo: updatedUser.photo
-      })
-  } catch (error) {
-    console.error(error);
-      res.status(404).json({ message: message.error });
-      return;
-  }
-};
+//     const updatedUser = await User.findByIdAndUpdate( id , { photo: cloudinaryImageUrl }, { new: true });
+//       res.status(200).json({
+//           id,
+//           photo: updatedUser.photo
+//       })
+//   } catch (error) {
+//     console.error(error);
+//       res.status(404).json({ message: message.error });
+//       return;
+//   }
+// };
 
 
 const letter = async (req, res) => {
@@ -183,6 +183,6 @@ export default {
     update,
     updateTheme,
     // uploadPhoto,
-    updatePhoto,
+    // updatePhoto,
     letter
 }
