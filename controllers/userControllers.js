@@ -83,11 +83,15 @@ const logout = async (req, res) => {
     res.status(204).json({message: "No content"})
 }
 
-const current = (req, res) => {
+const current = async (req, res) => {
     const { email } = req.user;
-    res.json({
-        email
-    })
+    const user = await User.findOne({ email });
+
+    if (!user.token) {
+        res.status(400), json({ message: error.message })  
+        return;   
+    }
+    res.status(200).json({ user });
 };
 
 const update = async (req, res) => {
