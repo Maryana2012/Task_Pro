@@ -6,10 +6,11 @@ const boardSchema = new Schema({
         unique: true,
     },
     icon: {
-        type:String,
+        type: String,
     },
     background: {
         type: String,
+        // type: Object,
     },
     ownerId: {
         type: String,

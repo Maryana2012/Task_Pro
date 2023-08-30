@@ -1,4 +1,5 @@
 import Board from "../models/board.js";
+// import Background from "../models/background.js";
 import HttpError from "../helpers/httpError.js";
 
 
@@ -36,18 +37,28 @@ const getBoard = async (req, res, next) => {
 const addBoard = async (req, res, next) => {
   try {
     const { _id } = req.user;
-    const { title, icon, background } = req.body;
+    const { title, icon, backgroundId } = req.body;
     if (
       !title ||
       !title.trim() ||
       !icon ||
       !icon.trim() ||
-      !background ||
-      !background.trim()
+      !backgroundId ||
+      !backgroundId.trim()
     ) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    const result = await Board.create({ ...req.body, ownerId: `${_id}` });
+    const background = await Background.findById(backgroundId);
+
+    if (!background) {
+      return res.status(404).json({ message: "Background not found" });
+    }
+
+    const result = await Board.create({
+      ...req.body,
+      ownerId: `${_id}`,
+      background: background
+    });
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -94,7 +105,6 @@ const updateBoard = async (req, res, next) => {
   }
 };
 
-
 const deleteBoard = async (req, res, next) => {
   try {
     const { boardId } = req.params;
@@ -109,6 +119,33 @@ const deleteBoard = async (req, res, next) => {
     next(error);
   }
 };
+
+// const deleteBoard = async (req, res, next) => {
+//   try {
+//     const { boardId } = req.params;
+
+//     const board = await Board.findById(boardId);
+
+//     if (!board) {
+//       throw HttpError(404, "Board not found");
+//     }
+
+//     if (board._id.toString() !== boardId) {
+//       throw HttpError(403, "Invalid boardId");
+//     }
+
+//     const result = await Board.findByIdAndDelete(boardId);
+    
+//     if (!result) {
+//       throw HttpError(404, "Not found");
+//     }
+//     res.json({
+//       message: "Board deleted",
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 
 const addColumn = async (req, res, next) => {
