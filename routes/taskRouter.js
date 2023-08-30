@@ -1,4 +1,5 @@
 import express from 'express';
+
 import taskControllers from '../controllers/taskControllers.js';
 
 import userValidators from '../middlewars/user/userValidators.js';
@@ -17,12 +18,10 @@ taskRouter.put("/:taskId", userValidators.authenticate, taskControllers.updateTa
 // Маршрут для видалення таска з дошки
 taskRouter.delete("/:taskId", userValidators.authenticate, taskControllers.deleteTask);
 
-//  Маршрут для переміщення таски в іншу колонку
+// Маршрут для переміщення таски в іншу колонку
 taskRouter.patch("/:taskId/move/:newColumnId", userValidators.authenticate, taskControllers.moveTask);
 
 // Маршрут фільтрації тасок з певним пріоритетом на дошці
-taskRouter.get("/priority/:priority", userValidators.authenticate, taskControllers.getTasksByPriority);
-
-
+taskRouter.get("/:boardId/:priority", userValidators.authenticate, taskControllers.getTasksByPriority);
 
 export default taskRouter;
