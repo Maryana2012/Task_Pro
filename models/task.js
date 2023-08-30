@@ -1,34 +1,4 @@
 import { Schema, model } from 'mongoose';
-import mongoose from 'mongoose';
-
-const boardSchema = new Schema({
-    // _id: mongoose.Schema.Types.ObjectId,
-    title: String,
-    icon: String, 
-    background: String,
-    // columns: [{
-    //     type: mongoose.Schema.Types.ObjectId, 
-    //     ref: 'Column',
-
-    // }]
-    columns: [
-        {
-        _id: mongoose.Schema.Types.ObjectId,
-        title: String
-        }
-    ]
-    
-});
-
-
-
-// const columnsSchema = new Schema({
-//     title: {
-//         type:String
-//     }
-// })
-
-export const Board = model('tasks', boardSchema);
 
 const taskSchema = new Schema({
   boardId: String,
@@ -36,9 +6,8 @@ const taskSchema = new Schema({
   title: String,
   text: String,
   priority: String,
-  deadline: Date
+  deadline: String
 });
 
 export const Task = model('Task', taskSchema);
 
-// export const Column = model('task', columnsSchema)
