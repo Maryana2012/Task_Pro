@@ -85,12 +85,7 @@ const logout = async (req, res) => {
 
 const current = async (req, res) => {
     const { email } = req.user;
-    const user = await User.findOne({ email });
-
-    if (!user.token) {
-        res.status(400), json({ message: error.message })  
-        return;   
-    }
+    
     res.status(200).json({ user });
 };
 
