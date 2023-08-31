@@ -16,16 +16,20 @@
     {
       "name": "Auth",
       "description": "Authorization endpoints"
+    },
+    {
+      "name": "Boards",
+      "description": "Boards & Columns endpoints"
     }
   ],
   "paths": {
     "/users/register": {
       "post": {
         "tags": ["Auth"],
-        "summary": "{ name, email, password }",
+        "summary": "Register a new user",
         "parameters": [],
         "requestBody": {
-          "description": "Registration's object",
+          "description": "This endpoint allows users to register by providing their name, email, and password in the request body.",
           "required": true,
           "content": {
             "application/json": {
@@ -80,10 +84,10 @@
     "/users/login": {
       "post": {
         "tags": ["Auth"],
-        "summary": "{ email, password }",
+        "summary": "Log in a user",
         "parameters": [],
         "requestBody": {
-          "description": "",
+          "description": "Authenticate users by providing their email and password in the request body.",
           "required": true,
           "content": {
             "application/json": {
@@ -130,19 +134,19 @@
                   "$ref": "#/components/schemas/error401"
                 },
                 "examples": {
-                  "!user": {
+                  "invalidCredentials": {
                     "description": "",
                     "value": {
                       "message": "Email or password wrong"
                     }
                   },
-                  "!passwordCompare": {
+                  "passwordComparisonFailed": {
                     "description": "",
                     "value": {
                       "message": "Email or password wrong"
                     }
                   },
-                  "user.token": {
+                  "userAlreadyLoggedIn": {
                     "description": "",
                     "value": {
                       "message": "This user is logged"
@@ -155,22 +159,22 @@
         }
       }
     },
-    "/users/update/:_id": {
+    "/users/{id}/update": {
       "put": {
         "tags": ["Auth"],
-        "summary": "{ name, email, password, thema }",
+        "summary": "Update user information",
         "parameters": [
           {
             "in": "path",
-            "name": "_id",
+            "name": "id",
             "required": "true",
             "type": "string",
-            "description": "user's _id"
+            "description": "ID of the user to update"
           }
         ],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "",
+          "description": "Provide updated user information in the request body.",
           "required": true,
           "content": {
             "application/json": {
@@ -182,7 +186,7 @@
         },
         "responses": {
           "200": {
-            "description": "No Content",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -202,7 +206,7 @@
                   "!user": {
                     "description": "",
                     "value": {
-                      "message": "User with _id not found"
+                      "message": "User with id not found"
                     }
                   }
                 }
@@ -215,7 +219,8 @@
     "/users/logout": {
       "post": {
         "tags": ["Auth"],
-        "summary": "token",
+        "summary": "Log out a user",
+        "description": "This endpoint allows a logged-in user to log out by sending a POST request. The user's authentication token needs to be included in the request headers for successful logout.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
 
@@ -226,6 +231,147 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/res204"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/boards/": {
+      "get": {
+        "tags": ["Boards"],
+        "summary": "Get all boards for the current user",
+        "description": "This endpoint allows a logged-in user to retrieve all boards associated with their account. The user's authentication token needs to be included in the request headers for successful access.",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/getAllBoardsResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error401"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Boards"],
+        "summary": "Create a new board",
+        "description": "This endpoint allows a logged-in user to create a new board.",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Provide the necessary information to create a new board.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/getBoardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/getBoardResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/boards/{boardId}": {
+      "get": {
+        "tags": ["Boards"],
+        "summary": "Get board by ID",
+        "description": "This endpoint allows a user to retrieve information about a specific board by its ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "required": "true",
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "ID of the board to retrieve"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoardObjResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
                 }
               }
             }
@@ -252,32 +398,6 @@
           "password": {
             "type": "string",
             "example": "qwerty123"
-          }
-        }
-      },
-      "UserResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "example": "7dh347fh4375fh45"
-          },
-          "name": {
-            "type": "string",
-            "example": "Ivan Petrov"
-          },
-          "email": {
-            "type": "string",
-            "example": "ivan@example.com",
-            "format": "email"
-          },
-          "thema": {
-            "type": "string",
-            "example": "dark"
-          },
-          "photo": {
-            "type": "string",
-            "example": "https://en.gravatar.com/"
           }
         }
       },
@@ -312,10 +432,32 @@
           "password": {
             "type": "string",
             "example": "777qwerty"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "7dh347fh4375fh45"
+          },
+          "name": {
+            "type": "string",
+            "example": "Ivan Petrov"
+          },
+          "email": {
+            "type": "string",
+            "example": "ivan@example.com",
+            "format": "email"
           },
           "thema": {
             "type": "string",
-            "example": "light"
+            "example": "dark"
+          },
+          "photo": {
+            "type": "string",
+            "example": "https://en.gravatar.com/"
           }
         }
       },
@@ -334,10 +476,67 @@
           "password": {
             "type": "string",
             "example": "777qwerty"
-          },
-          "thema": {
+          }
+        }
+      },
+      "getAllBoardsResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
             "type": "string",
-            "example": "light"
+            "example": "Main board"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string",
+            "example": "64ef7e4e6fe614f2171a12c2"
+          },
+          "id": {
+            "type": "string",
+            "example": "64ef796f093c81f56908b4b8"
+          }
+        }
+      },
+      "getBoardRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Main board"
+          },
+          "icon": {
+            "type": "string",
+            "example": "https://en.gravatar.com/....."
+          },
+          "background": {
+            "type": "string",
+            "example": "https://en.gravatar.com/....."
+          }
+        }
+      },
+      "getBoardResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Main board"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string",
+            "example": "https://en.gravatar.com/....."
+          },
+          "ownerId": {
+            "type": "string",
+            "example": "64ef7e4e6fe614f2171a12c2"
+          },
+          "columns": {
+            "type": "array",
+            "example": "[{},{}]"
           }
         }
       },

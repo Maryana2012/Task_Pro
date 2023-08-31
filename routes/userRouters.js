@@ -19,5 +19,4 @@ userRouter.patch('/:id/photo',userValidators.userUpdatePhoto, uploadCloud.single
 
 userRouter.post('/letter',  userValidators.isEmptyBody, userControllers.letter )
 
-
 export default userRouter;

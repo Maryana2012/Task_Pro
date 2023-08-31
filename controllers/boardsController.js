@@ -1,12 +1,13 @@
 import Board from "../models/board.js";
 // import Background from "../models/background.js";
 import HttpError from "../helpers/httpError.js";
+import mongoose from "mongoose";
 
 
 const getAllBoards = async (req, res, next) => {
   try {
-    const { _id } = req.user;
-    const filter = { ownerId: _id };
+    const { id } = req.user;
+    const filter = { ownerId: id };
     const result = await Board.find(filter, {
       title: 1,
       icon: 1,
@@ -20,46 +21,52 @@ const getAllBoards = async (req, res, next) => {
 };
 
 
-const getBoard = async (req, res, next) => {
+const addBoard = async (req, res, next) => {
   try {
-    const { boardId } = req.params;
-    const result = await Board.findById(boardId);
-    if (!result) {
-      throw HttpError(404, "Not found");
+    const { _id } = req.user;
+    const { title, icon, background } = req.body;
+    console.log(title);
+    console.log(icon);
+    console.log(background);
+    if (
+      !title ||
+      !title.trim() ||
+      !icon ||
+      !icon.trim() ||
+      !background ||
+      !background.trim()
+    ) {
+      return res.status(400).json({ message: "All fields are required" });
     }
-    res.json(result);
+    // const background = await Background.findById(backgroundId);
+
+    // if (!background) {
+    //   return res.status(404).json({ message: "Background not found" });
+    // }
+
+    const result = await Board.create({
+      ...req.body,
+      ownerId: `${_id}`,
+      // background: background
+    });
+    res.status(201).json(result);
   } catch (error) {
     next(error);
   }
 };
 
 
-const addBoard = async (req, res, next) => {
+const getBoard = async (req, res, next) => {
   try {
-    const { _id } = req.user;
-    const { title, icon, backgroundId } = req.body;
-    if (
-      !title ||
-      !title.trim() ||
-      !icon ||
-      !icon.trim() ||
-      !backgroundId ||
-      !backgroundId.trim()
-    ) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-    const background = await Background.findById(backgroundId);
+    const { boardId } = req.params;
+    console.log(boardId);
 
-    if (!background) {
-      return res.status(404).json({ message: "Background not found" });
-    }
+    const result = await Board.findById(boardId);
 
-    const result = await Board.create({
-      ...req.body,
-      ownerId: `${_id}`,
-      background: background
-    });
-    res.status(201).json(result);
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+    res.json(result);
   } catch (error) {
     next(error);
   }
