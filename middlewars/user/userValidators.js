@@ -66,7 +66,7 @@ const authenticate = async (req, res, next) => {
         next();
     }
     catch (error) {
-        res.status(401).json({ message: `Not authorized` });
+        res.status(401).json({ message: error.message });
         return;
     }
 }

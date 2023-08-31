@@ -22,7 +22,7 @@ const register = async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({...req.body, password: hashPassword, photo: "" });
-     console.log(newUser._id)
+    
     const payload = {
         id: newUser._id
     }
@@ -83,18 +83,35 @@ const logout = async (req, res) => {
     res.status(204).json({message: "No content"})
 }
 
+const current = async (req, res) => {
+    const { email } = req.user;
+    const user = await User.findOne({ email });
+
+    res.status(200).json({
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            theme: user.theme,
+            photo: user.photo 
+        },
+        token: user.token
+        });
+};
+
 const update = async (req, res) => {
-    const { name, email, password, photo } = req.body;
     const { id } = req.params;
+    const { name, email, password } = req.body;
+    const cloudinaryImageUrl = req.file.path;
+   
     const user = await User.findById(id);
 
     if (!user) {
         res.status(401).json({ message: `User with ${id} not found` });
         return;
     } 
- 
     const hashPassword = await bcrypt.hash(password, 10);
-    const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword, photo }, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword, photo: cloudinaryImageUrl}, { new: true });
     
     res.status(200).json({
         user: {
@@ -104,7 +121,7 @@ const update = async (req, res) => {
             password: updatedUser.password,
             theme: user.theme,
             photo: updatedUser.photo
-        }
+        }, token
     });
 }
 
@@ -119,24 +136,23 @@ const updateTheme = async (req, res) => {
     })
 }
 
-const updatePhoto = async (req, res) => {
-  try {
-      const { id } = req.params;
-      console.log(id)
-      const cloudinaryImageUrl = req.file.path;
-      console.log(cloudinaryImageUrl)
+// const updatePhoto = async (req, res) => {
+//   try {
+//       const { id } = req.params;
+//      const cloudinaryImageUrl = req.file.path;
+//       console.log(cloudinaryImageUrl)
 
-    const updatedUser = await User.findByIdAndUpdate( id , { photo: cloudinaryImageUrl }, { new: true });
-      res.status(200).json({
-          id,
-          photo: updatedUser.photo
-      })
-  } catch (error) {
-    console.error(error);
-      res.status(404).json({ message: message.error });
-      return;
-  }
-};
+//     const updatedUser = await User.findByIdAndUpdate( id , { photo: cloudinaryImageUrl }, { new: true });
+//       res.status(200).json({
+//           id,
+//           photo: updatedUser.photo
+//       })
+//   } catch (error) {
+//     console.error(error);
+//       res.status(404).json({ message: message.error });
+//       return;
+//   }
+// };
 
 
 const letter = async (req, res) => {
@@ -154,7 +170,7 @@ const letter = async (req, res) => {
     const transport = nodemailer.createTransport(nodemailerConfig);
     const emailConfig = {
         from: UKR_NET_EMAIL,
-        to: "taskpro.gmail@gmail.com",
+        to: "taskpro.project@gmail.com",
         subject: "helper letter",
         html: `<p>${text}</p><p>Send answer to email ${email}</p>`
     }
@@ -168,15 +184,14 @@ const letter = async (req, res) => {
         })
 }
 
-
-
 export default {
     register,
     login,
     logout,
+    current,
     update,
     updateTheme,
     // uploadPhoto,
-    updatePhoto,
+    // updatePhoto,
     letter
 }
