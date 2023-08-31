@@ -87,7 +87,16 @@ const current = async (req, res) => {
     const { email } = req.user;
     const user = await User.findOne({ email });
 
-    res.status(200).json({ user });
+    res.status(200).json({
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            theme: user.theme,
+            photo: user.photo 
+        },
+        token: user.token
+        });
 };
 
 const update = async (req, res) => {
@@ -112,7 +121,7 @@ const update = async (req, res) => {
             password: updatedUser.password,
             theme: user.theme,
             photo: updatedUser.photo
-        }
+        }, token
     });
 }
 
