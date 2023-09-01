@@ -3,7 +3,7 @@ import { Task } from '../models/task.js';
 // ok
 const getAllTasks = async (req, res) => {
   try {
-    const { boardId } = req.body;
+    const { boardId } = req.params;
 
     const tasks = await Task.find( {boardId} );
     res.status(200).json(tasks);
