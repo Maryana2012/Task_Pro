@@ -5,19 +5,8 @@ const getAllTasks = async (req, res) => {
   try {
     const { boardId } = req.body;
 
-    const filter = {boardId : boardId}
-    const result = await Task.find(filter, {
-      title: 1,
-      text: 1,
-      priority: 1,
-      deadline: 1,
-      boardId:1,
-      columnId:1
-
-    }).populate("boardId", "id")
-
-    // const tasks = await Task.find( {boardId} );
-    res.status(200).json(result);
+    const tasks = await Task.find( {boardId} );
+    res.status(200).json(tasks);
   }
   catch (error) {
     return res.status(404).json({ message: error.message });

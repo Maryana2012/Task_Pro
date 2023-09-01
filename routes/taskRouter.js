@@ -6,7 +6,7 @@ import taskValidators from '../middlewars/tasks/taskValidators.js';
 
 const taskRouter = express.Router();
 
-taskRouter.get("/", userValidators.authenticate, taskControllers.getAllTasks);
+taskRouter.get("/:boardId", userValidators.authenticate, taskControllers.getAllTasks);
 
 taskRouter.post("/", userValidators.authenticate, userValidators.isEmptyBody, taskValidators.taskValidator, taskControllers.addTask);
 
