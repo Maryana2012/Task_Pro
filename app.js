@@ -6,6 +6,7 @@ import mainPageRouter from './routes/mainPageRouter.js';
 import userRouter from './routes/userRouters.js';
 import taskRouter from './routes/taskRouter.js'
 import boardsRouter from './routes/boardsRouter.js'
+// import backgroundRouter from './routes/backgroundRoutes.js';
 
 // для swagger
 import swaggerUi from "swagger-ui-express";
@@ -23,6 +24,7 @@ app.use('/', mainPageRouter);
 app.use('/users', userRouter);
 app.use('/tasks', taskRouter);
 app.use('/boards', boardsRouter);
+// app.use('/backgrounds', backgroundRouter);
 
 
 app.use(
