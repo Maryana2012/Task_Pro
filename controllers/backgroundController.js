@@ -11,9 +11,9 @@ const getBackgroundPreviews = (req, res) => {
       return res.status(404).json({ error: 'Backgrounds not found' });
     }
 
-    res.json(previewData);
+    res.status(200).json(previewData);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ message: error.message });
   }
 };
 
