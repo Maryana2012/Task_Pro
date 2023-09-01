@@ -4,7 +4,8 @@ import userValidators from '../middlewars/user/userValidators.js'
 import boardsController from '../controllers/boardsController.js';
 import boardsSchemas from '../schemas/boardsSchemas.js';
 import validateBody from '../decorators/validateBody.js';
-import backgroundController from '../controllers/backgroundController.js'
+import backgroundsSchemas from '../schemas/backgroundsSchemas.js';
+import getBackgroundPreviews from '../controllers/backgroundController.js';
 
 const boardsRouter = express.Router();
 
@@ -24,6 +25,6 @@ boardsRouter.patch('/:boardId/columns/:columnId', userValidators.authenticate, v
 
 boardsRouter.delete('/:boardId/columns/:columnId', userValidators.authenticate, boardsController.deleteColumn);
 
-boardsRouter.get('/backgrounds', userValidators.authenticate, backgroundController.getBackgroundPreviews);
+boardsRouter.get('/backgrounds', userValidators.authenticate, validateBody(backgroundsSchemas.choiceBackgroundSchema), getBackgroundPreviews);
 
 export default boardsRouter;
