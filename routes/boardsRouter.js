@@ -22,8 +22,8 @@ boardsRouter.post('/:boardId/columns', userValidators.authenticate, validateBody
 
 boardsRouter.patch('/:boardId/columns/:columnId', userValidators.authenticate, validateBody(boardsSchemas.updateColumnSchema), boardsController.updateColumn);
 
-boardsRouter.delete('/:boardId/columns/:columnId', userValidators.authenticate, backgroundController.getBackgroundPreviews);
+boardsRouter.delete('/:boardId/columns/:columnId', userValidators.authenticate, boardsController.deleteColumn);
 
-boardsRouter.get('/backgrounds', userValidators.authenticate, )
+boardsRouter.get('/backgrounds', userValidators.authenticate, backgroundController.getBackgroundPreviews);
 
 export default boardsRouter;
