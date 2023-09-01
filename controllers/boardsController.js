@@ -25,9 +25,6 @@ const addBoard = async (req, res, next) => {
   try {
     const { _id } = req.user;
     const { title, icon, background } = req.body;
-    console.log(title);
-    console.log(icon);
-    console.log(background);
     if (
       !title ||
       !title.trim() ||

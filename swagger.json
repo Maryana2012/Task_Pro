@@ -238,6 +238,7 @@
         }
       }
     },
+
     "/boards/": {
       "get": {
         "tags": ["Boards"],
@@ -247,13 +248,13 @@
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Ок",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/getAllBoardsResponse"
+                    "$ref": "#/components/schemas/getBoardsResponse"
                   }
                 }
               }
@@ -264,7 +265,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error401"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid signature"
+                    }
+                  }
                 }
               }
             }
@@ -283,7 +290,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/getBoardRequest"
+                "$ref": "#/components/schemas/postBoardRequest"
               }
             }
           }
@@ -294,12 +301,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user": {
-                      "$ref": "#/components/schemas/getBoardResponse"
-                    }
-                  }
+                  "$ref": "#/components/schemas/BoardResponse"
                 }
               }
             }
@@ -309,17 +311,29 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error401"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid signature"
+                    }
+                  }
                 }
               }
             }
           },
           "404": {
-            "description": "Unauthorized",
+            "description": "Not Found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error404"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Not Found"
+                    }
+                  }
                 }
               }
             }
@@ -347,11 +361,11 @@
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BoardObjResponse"
+                  "$ref": "#/components/schemas/BoardResponse"
                 }
               }
             }
@@ -361,7 +375,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error401"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid signature"
+                    }
+                  }
                 }
               }
             }
@@ -371,10 +391,144 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error404"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Not Found"
+                    }
+                  }
                 }
               }
             }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Boards"],
+        "summary": "Update board by ID",
+        "description": "This endpoint allows a user to update information about a specific board by its ID.",
+        "parameters": [
+          {"$ref": "#/components/parameters/boardId"}
+        ],
+        "security": [{"Bearer": []}],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/BoardRequestBody"
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/BoardResponse"}
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Boards"],
+        "summary": "Delete board by ID",
+        "description": "This endpoint allows a user to delete a specific board by its ID.",
+        "parameters": [
+          {"$ref": "#/components/parameters/boardId"}
+        ],
+        "security": [{"Bearer": []}],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {"type": "string", "example": "Board deleted"}
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      }
+    },
+    "/boards/{boardId}/columns": {
+      "post": {
+        "tags": ["Boards"],
+        "summary": "Add column to board",
+        "description": "This endpoint allows a user to add a new column to a specific board.",
+        "parameters": [
+          {"$ref": "#/components/parameters/boardId"}
+        ],
+        "security": [{"Bearer": []}],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/AddColumnRequestBody"
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ColumnResponse"}
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ConflictError"
+          }
+        }
+      }
+    },
+    "/boards/{boardId}/columns/{columnId}": {
+      "patch": {
+        "tags": ["Boards"],
+        "summary": "Update column by ID",
+        "description": "This endpoint allows a user to update a column of a specific board by its ID.",
+        "parameters": [
+          {"$ref": "#/components/parameters/boardId"},
+          {"$ref": "#/components/parameters/columnId"}
+        ],
+        "security": [{"Bearer": []}],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateColumnRequestBody"
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ColumnResponse"}
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
           }
         }
       }
@@ -479,12 +633,13 @@
           }
         }
       },
-      "getAllBoardsResponse": {
+
+      "getBoardsResponse": {
         "type": "object",
         "properties": {
           "title": {
             "type": "string",
-            "example": "Main board"
+            "example": "My board"
           },
           "icon": {
             "type": "string"
@@ -499,36 +654,38 @@
           }
         }
       },
-      "getBoardRequest": {
+
+      "postBoardRequest": {
         "type": "object",
         "properties": {
           "title": {
             "type": "string",
-            "example": "Main board"
+            "example": "My board"
           },
           "icon": {
             "type": "string",
-            "example": "https://en.gravatar.com/....."
+            "example": "https://....."
           },
           "background": {
             "type": "string",
-            "example": "https://en.gravatar.com/....."
+            "example": "https://....."
           }
         }
       },
-      "getBoardResponse": {
+      "BoardResponse": {
         "type": "object",
         "properties": {
           "title": {
             "type": "string",
-            "example": "Main board"
+            "example": "My board"
           },
           "icon": {
-            "type": "string"
+            "type": "string",
+            "example": "https://....."
           },
           "background": {
             "type": "string",
-            "example": "https://en.gravatar.com/....."
+            "example": "https://....."
           },
           "ownerId": {
             "type": "string",
@@ -536,10 +693,11 @@
           },
           "columns": {
             "type": "array",
-            "example": "[{},{}]"
+            "example": "[ {} ]"
           }
         }
       },
+
       "Token": {
         "type": "string",
         "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
@@ -559,24 +717,6 @@
           "message": {
             "type": "string",
             "example": "Bad request"
-          }
-        }
-      },
-      "error401": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "example": "Not authorized"
-          }
-        }
-      },
-      "error404": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "example": "Not found"
           }
         }
       },

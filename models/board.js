@@ -19,6 +19,7 @@ const boardSchema = new Schema({
         type: [{
             title: String,
             boardId: String,
+            taska: []
           }]
     }
 
