@@ -12,16 +12,15 @@ const boardSchema = new Schema({
         type: String,
     },
     ownerId: {
-        type: String,
+            type: String,
     },
     columns: {
-        type: [{
-            title: String,
-            boardId: String,
-            tasks: []
-          }]
+            type: [{
+                title: String,
+                boardId: String,
+                tasks: []
+            }]
     }
-
 }, { versionKey: false, timestamps: true })
 
 const Board = model("board", boardSchema);
