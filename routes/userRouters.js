@@ -28,5 +28,4 @@ userRouter.patch('/:id/theme', userValidators.isEmptyBody, userValidators.isVali
 
 userRouter.post('/letter',  userValidators.isEmptyBody, userControllers.letter )
 
-
 export default userRouter;
