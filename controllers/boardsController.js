@@ -1,13 +1,13 @@
 import Board from "../models/board.js";
+import backgrounds from '../backgrounds/collectionBackgrounds.js'
 import HttpError from "../helpers/httpError.js";
-
-import backgrounds from '../backgrounds/сollectionBackgrounds.js';
+import mongoose from "mongoose";
 
 
 const getAllBoards = async (req, res, next) => {
   try {
-    const { _id } = req.user;
-    const filter = { ownerId: _id };
+    const { id } = req.user;
+    const filter = { ownerId: id };
     const result = await Board.find(filter, {
       title: 1,
       icon: 1,
@@ -20,11 +20,54 @@ const getAllBoards = async (req, res, next) => {
   }
 };
 
+const addBoard = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { title, icon, background } = req.body;
+    
+    if (
+      !icon ||
+      !icon.trim()
+    ) {
+      return res.status(400).json({ message: "icon is required" });
+    }
+
+    if (
+      !title ||
+      !title.trim() 
+    ) {
+      return res.status(400).json({ message: "title is required" });
+    }
+   
+    let selectedBackground = null;
+
+    if (background && background.trim() !== "null") {
+      selectedBackground = backgrounds.find(bg => bg._id === background);
+      console.log("selectedBackground:", selectedBackground);
+      if (!selectedBackground) {
+        return res.status(404).json({ message: "Background not found" });
+      }
+    }
+
+    const result = await Board.create({
+      ...req.body,
+      ownerId: `${id}`,
+      background: selectedBackground
+    });
+
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 const getBoard = async (req, res, next) => {
   try {
     const { boardId } = req.params;
+    console.log(boardId);
+
     const result = await Board.findById(boardId);
+
     if (!result) {
       throw HttpError(404, "Not found");
     }
@@ -34,56 +77,39 @@ const getBoard = async (req, res, next) => {
   }
 };
 
-
-const addBoard = async (req, res, next) => {
-  try {
-    const { _id } = req.user;
-    const { title, icon, background } = req.body;
-    if (
-      !title ||
-      !title.trim() ||
-      !icon ||
-      !icon.trim() ||
-      !background ||
-      !background.trim()
-    ) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-    const result = await Board.create({ ...req.body, ownerId: `${_id}` });
-    res.status(201).json(result);
-  } catch (error) {
-    next(error);
-  }
-};
-
-
 const updateBoard = async (req, res, next) => {
   try {
     const { boardId } = req.params;
-    const { title, icon, background } = req.body;
+    const { title, icon, backgroundId } = req.body;
 
     const currentBoard = await Board.findById(boardId);
 
     if (!currentBoard) {
-      throw HttpError(404, "Not found");
+      throw HttpError(404, "Not found board");
     }
 
     const updatedFields = {};
 
-    if (title !== undefined && title.trim() && title !== currentBoard.title) {
+    if (title !== undefined && title.trim() !== currentBoard.title) {
       updatedFields.title = title;
     }
     if (icon !== undefined && icon !== currentBoard.icon) {
       updatedFields.icon = icon;
     }
-    if (background !== undefined && background !== currentBoard.background) {
-      updatedFields.background = background;
+
+    if (backgroundId !== undefined && backgroundId !== currentBoard.background._id) {
+      const foundBackground = backgrounds.find((bg) => bg._id === backgroundId);
+      if (foundBackground) {
+        updatedFields.background = foundBackground;
+      } else {
+        return res.status(400).json({ message: "Invalid background ID" });
+      }
     }
 
     if (Object.keys(updatedFields).length === 0) {
       return res
         .status(400)
-        .json({ message: "At least one field must be different" });
+        .json({ message: "No fields to update" });
     }
 
     const result = await Board.findByIdAndUpdate(boardId, updatedFields, {
@@ -96,10 +122,16 @@ const updateBoard = async (req, res, next) => {
   }
 };
 
-
 const deleteBoard = async (req, res, next) => {
   try {
     const { boardId } = req.params;
+    const board = await Board.findById(boardId);
+    if (!board) {
+      throw HttpError(404, "Board not found");
+    }
+    if (board._id.toString() !== boardId) {
+      throw HttpError(403, "Invalid boardId");
+    }
     const result = await Board.findByIdAndDelete(boardId);
     if (!result) {
       throw HttpError(404, "Not found");
@@ -111,7 +143,6 @@ const deleteBoard = async (req, res, next) => {
     next(error);
   }
 };
-
 
 const addColumn = async (req, res, next) => {
   try {
@@ -141,7 +172,6 @@ const addColumn = async (req, res, next) => {
     next(error);
   }
 };
-
 
 const updateColumn = async (req, res, next) => {
   try {
@@ -175,7 +205,6 @@ const updateColumn = async (req, res, next) => {
   }
 };
 
-
 const deleteColumn = async (req, res, next) => {
   try {
     const { boardId, columnId } = req.params;
@@ -187,10 +216,10 @@ const deleteColumn = async (req, res, next) => {
     if (columnIndex === -1) {
       return res.status(404).json({ message: "Column not found" });
     }
-    board.columns.splice(columnIndex, 1);
+    const {title, tasks, _id} = board.columns.splice(columnIndex, 1)[0];
     await board.save();
 
-    res.status(200).json({ message: "Column deleted" });
+    res.status(200).json({title, boardId, tasks, _id});
 
   } catch (error) {
     next(error);
