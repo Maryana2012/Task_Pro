@@ -109,9 +109,17 @@ const updateBoard = async (req, res, next) => {
   }
 };
 
+
 const deleteBoard = async (req, res, next) => {
   try {
     const { boardId } = req.params;
+    const board = await Board.findById(boardId);
+    if (!board) {
+      throw HttpError(404, "Board not found");
+    }
+    if (board._id.toString() !== boardId) {
+      throw HttpError(403, "Invalid boardId");
+    }
     const result = await Board.findByIdAndDelete(boardId);
     if (!result) {
       throw HttpError(404, "Not found");
@@ -123,34 +131,6 @@ const deleteBoard = async (req, res, next) => {
     next(error);
   }
 };
-
-// const deleteBoard = async (req, res, next) => {
-//   try {
-//     const { boardId } = req.params;
-
-//     const board = await Board.findById(boardId);
-
-//     if (!board) {
-//       throw HttpError(404, "Board not found");
-//     }
-
-//     if (board._id.toString() !== boardId) {
-//       throw HttpError(403, "Invalid boardId");
-//     }
-
-//     const result = await Board.findByIdAndDelete(boardId);
-    
-//     if (!result) {
-//       throw HttpError(404, "Not found");
-//     }
-//     res.json({
-//       message: "Board deleted",
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 
 const addColumn = async (req, res, next) => {
   try {
@@ -180,7 +160,6 @@ const addColumn = async (req, res, next) => {
     next(error);
   }
 };
-
 
 const updateColumn = async (req, res, next) => {
   try {
@@ -214,7 +193,6 @@ const updateColumn = async (req, res, next) => {
   }
 };
 
-
 const deleteColumn = async (req, res, next) => {
   try {
     const { boardId, columnId } = req.params;
@@ -226,10 +204,10 @@ const deleteColumn = async (req, res, next) => {
     if (columnIndex === -1) {
       return res.status(404).json({ message: "Column not found" });
     }
-    board.columns.splice(columnIndex, 1);
+    const {title, tasks, _id} = board.columns.splice(columnIndex, 1)[0];
     await board.save();
 
-    res.status(200).json({ message: "Column deleted" });
+    res.status(200).json({title, boardId, tasks, _id});
 
   } catch (error) {
     next(error);

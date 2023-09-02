@@ -1,0 +1,396 @@
+{
+  "schemas": {
+    "RegRequest": {
+      "type": "object",
+      "required": ["name", "email", "password"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Ivan Petrov"
+        },
+        "email": {
+          "type": "string",
+          "example": "ivan@example.com",
+          "format": "email"
+        },
+        "password": {
+          "type": "string",
+          "example": "qwerty123"
+        }
+      }
+    },
+    "RegResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "7dh347fh4375fh45"
+        },
+        "name": {
+          "type": "string",
+          "example": "Ivan Petrov"
+        },
+        "email": {
+          "type": "string",
+          "example": "ivan@example.com",
+          "format": "email"
+        },
+        "thema": {
+          "type": "string",
+          "example": "dark"
+        },
+        "photo": {
+          "type": "string",
+          "example": "https://..."
+        }
+      }
+    },
+    "LoginRequest": {
+      "type": "object",
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "ivan@example.com",
+          "format": "email"
+        },
+        "password": {
+          "type": "string",
+          "example": "qwerty123"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "7dh347fh4375fh45"
+        },
+        "email": {
+          "type": "string",
+          "example": "ivan@example.com",
+          "format": "email"
+        },
+        "thema": {
+          "type": "string",
+          "example": "dark"
+        },
+        "photo": {
+          "type": "string",
+          "example": "https://en.gravatar.com/"
+        }
+      }
+    },
+    "CurUserRequest": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "anton@example.com",
+          "format": "email"
+        }
+      }
+    },
+    "CurUserResponse": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "anton@example.com",
+          "format": "email"
+        }
+      }
+    },
+    "UserThemeRequest": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "theme": {
+          "type": "string",
+          "example": "violet"
+        }
+      }
+    },
+    "UserThemeResponse": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "userId"
+        },
+        "theme": {
+          "type": "string",
+          "example": "violet"
+        }
+      }
+    },
+
+
+
+
+    "UpdateUserRequest": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Anton Ptuchkin"
+        },
+        "email": {
+          "type": "string",
+          "example": "anton@example.com",
+          "format": "email"
+        },
+        "password": {
+          "type": "string",
+          "example": "777qwerty"
+        }
+      }
+    },
+
+    "UserResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "7dh347fh4375fh45"
+        },
+        "name": {
+          "type": "string",
+          "example": "Ivan Petrov"
+        },
+        "email": {
+          "type": "string",
+          "example": "ivan@example.com",
+          "format": "email"
+        },
+        "thema": {
+          "type": "string",
+          "example": "dark"
+        },
+        "photo": {
+          "type": "string",
+          "example": "https://en.gravatar.com/"
+        }
+      }
+    },
+    "UpdateUserResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Anton Ptuchkin"
+        },
+        "email": {
+          "type": "string",
+          "example": "anton@example.com",
+          "format": "email"
+        },
+        "password": {
+          "type": "string",
+          "example": "777qwerty"
+        }
+      }
+    },
+
+    "getBoardsResponse": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "My board"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "ownerId": {
+          "type": "string",
+          "example": "64ef7e4e6fe614f2171a12c2"
+        },
+        "id": {
+          "type": "string",
+          "example": "64ef796f093c81f56908b4b8"
+        }
+      }
+    },
+
+    "postBoardRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "My board"
+        },
+        "icon": {
+          "type": "string",
+          "example": "https://....."
+        },
+        "background": {
+          "type": "string",
+          "example": "https://....."
+        }
+      }
+    },
+    "BoardResponse": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "My board"
+        },
+        "icon": {
+          "type": "string",
+          "example": "https://....."
+        },
+        "background": {
+          "type": "string",
+          "example": "https://....."
+        },
+        "ownerId": {
+          "type": "string",
+          "example": "64ef7e4e6fe614f2171a12c2"
+        },
+        "columns": {
+          "type": "array",
+          "example": "[ {} ]"
+        }
+      }
+    },
+    "putBoardRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "My board"
+        },
+        "icon": {
+          "type": "string",
+          "example": "https://....."
+        },
+        "background": {
+          "type": "string",
+          "example": "https://....."
+        }
+      }
+    },
+    "postColumnRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "New column - 1"
+        }
+      }
+    },
+    "ColumnResponse": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "My board"
+        },
+
+        "boardId": {
+          "type": "string",
+          "example": "64ef7e4e6fe614f2171a12c2"
+        },
+        "tasks": {
+          "type": "array",
+          "example": "[ ]"
+        }
+      }
+    },
+
+    "userIdParameters": {
+      "in": "path",
+      "name": "id",
+      "required": "true",
+      "schema": {
+        "type": "string",
+        "format": "ObjectId"
+      },
+      "description": "ID of the user to retrieve"
+    },
+    "boardIdParameters": {
+      "in": "path",
+      "name": "boardId",
+      "required": "true",
+      "schema": {
+        "type": "string",
+        "format": "ObjectId"
+      },
+      "description": "ID of the board to retrieve"
+    },
+    "columnIdParameters": {
+      "in": "path",
+      "name": "columnId",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "format": "ObjectId"
+      },
+      "description": "ID of the column to retrieve"
+    },
+    "Token": {
+      "type": "string",
+      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
+    },
+    "res204": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "No content"
+        }
+      }
+    },
+
+    "error400": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "bad request"
+        }
+      }
+    },
+    "error401": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "unauthorized"
+        }
+      }
+    },
+    "error403": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "forbidden"
+        }
+      }
+    },
+    "error409": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "email in use"
+        }
+      }
+    }
+  },
+  "securitySchemes": {
+    "Bearer": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  }
+}

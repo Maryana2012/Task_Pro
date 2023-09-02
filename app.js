@@ -10,10 +10,16 @@ import boardsRouter from './routes/boardsRouter.js'
 // для swagger
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json" assert { type: "json" };
+import paths from "./paths.json" assert { type: "json" };;
+import components from "./components.json" assert { type: "json" };;
+
 
 const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
+
+swaggerDocument.paths = paths;
+swaggerDocument.components = components;
 
 app.use(logger(formatsLogger))
 app.use(cors())
