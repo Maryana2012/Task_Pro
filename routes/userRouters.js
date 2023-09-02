@@ -1,14 +1,14 @@
 import express from 'express';
 import userControllers from '../controllers/userControllers.js';
 import userValidators from '../middlewars/user/userValidators.js';
-// import passport from '../middlewars/user/google-authenticate.js'
+import passport from '../middlewars/user/google-authenticate.js'
 
 
 const userRouter = express.Router();
 
-// userRouter.get('/google', passport.authenticate('google', { scope: ["email", "profile"] }));
+userRouter.get('/google', passport.authenticate('google', { scope: ["email", "profile"] }));
 
-// userRouter.get('/google/callback', passport.authenticate('google', {session : false}), userControllers.googleAuth)
+userRouter.get('/google/callback', passport.authenticate('google', {session : false}), userControllers.googleAuth)
 
 userRouter.post('/register', userValidators.isEmptyBody, userValidators.userRegisterValidator, userControllers.register);
 
