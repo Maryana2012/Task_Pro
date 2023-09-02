@@ -22,26 +22,9 @@ const getAllBoards = async (req, res, next) => {
 
 const addBoard = async (req, res, next) => {
   try {
-    // const { id } = req.user;
-    // console.log(id);
+    const { id } = req.user;
     const { title, icon, background } = req.body;
-    console.log(req.body);
-    // if (
-    //   !title ||
-    //   !title.trim() ||
-    //   !icon ||
-    //   !icon.trim() ||
-    //   !background ||
-    //   !background.trim()
-    // ) {
-    //   return res.status(400).json({ message: "All fields are required" });
-    // }
-    if (
-      !background ||
-      !background.trim()
-    ) {
-      return res.status(400).json({ message: "background is required" });
-    }
+    
     if (
       !icon ||
       !icon.trim()
@@ -55,20 +38,20 @@ const addBoard = async (req, res, next) => {
     ) {
       return res.status(400).json({ message: "title is required" });
     }
- 
-    console.log(title);
-    console.log(icon);
-    console.log(background);
-    const selectedBackground = backgrounds.find(bg => bg._id === background);
-    console.log("selectedBackground:", selectedBackground);
+   
+    let selectedBackground = null;
 
-    if (!selectedBackground) {
-      return res.status(404).json({ message: "Background not found" });
+    if (background && background.trim() !== "null") {
+      selectedBackground = backgrounds.find(bg => bg._id === background);
+      console.log("selectedBackground:", selectedBackground);
+      if (!selectedBackground) {
+        return res.status(404).json({ message: "Background not found" });
+      }
     }
 
     const result = await Board.create({
       ...req.body,
-      // ownerId: `${id}`,
+      ownerId: `${id}`,
       background: selectedBackground
     });
 
