@@ -13,13 +13,13 @@ const moveTaskSchema = Joi.object({
   newColumnId: Joi.string().required()
 });
 
-const priorityTaskSchema = Joi.object({
-  boardId: Joi.string().required(), 
-  priority: Joi.string().valid('low', 'medium', 'high', 'without').required()
-});
+// const priorityTaskSchema = Joi.object({
+//   boardId: Joi.string().required(), 
+//   priority: Joi.string().valid('low', 'medium', 'high', 'without').required()
+// });
 
 export default  {
   taskSchema,
   moveTaskSchema,
-  priorityTaskSchema
+  // priorityTaskSchema
 }

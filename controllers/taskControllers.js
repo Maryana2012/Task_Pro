@@ -82,7 +82,7 @@ const moveTask = async (req, res) => {
 // ok
 const getTasksByPriority = async (req, res) => {
   try {
-    const { boardId, priority } = req.body;
+    const { boardId, priority } = req.params;
       
     const filteredTasks = await Task.find({ boardId, priority });
     

@@ -16,6 +16,6 @@ taskRouter.delete("/:taskId", userValidators.authenticate, taskControllers.delet
 
 taskRouter.patch("/:taskId/move", userValidators.authenticate, userValidators.isEmptyBody, taskValidators.moveTask, taskControllers.moveTask);
 
-taskRouter.get("/filter", userValidators.authenticate, userValidators.isEmptyBody, taskValidators.isPriority, taskControllers.getTasksByPriority);
+taskRouter.get("/:boardId/:priority", userValidators.authenticate, taskControllers.getTasksByPriority);
 
 export default taskRouter;
