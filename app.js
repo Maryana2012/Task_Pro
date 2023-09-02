@@ -24,7 +24,6 @@ app.use('/users', userRouter);
 app.use('/tasks', taskRouter);
 app.use('/boards', boardsRouter);
 
-
 app.use(
   "/api-docs",
   swaggerUi.serve,

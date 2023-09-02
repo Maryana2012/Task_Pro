@@ -71,6 +71,15 @@ const authenticate = async (req, res, next) => {
     }
 }
 
+const refreshToken = (req, res, next) => {
+  const { error } = userSchema.userRefreshSchema.validate(req.body);
+  if (error) {
+    res.status(400).json({ message: error.message});
+    return;
+  }
+  next();
+} 
+
 const isValidId = (req, res, next) => {
     const {id } = req.params;
     if (!isValidObjectId(id)) {
@@ -112,6 +121,7 @@ export default {
   userRegisterValidator,
   userLoginValidator,
   authenticate,
+  refreshToken,
   isValidId,
   isTheme,
   userUpdateValidator,

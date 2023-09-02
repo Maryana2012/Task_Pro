@@ -7,7 +7,7 @@ import User from '../models/user.js'
 
 dotenv.config();
 
-const { SECRET_KEY, UKR_NET_EMAIL, UKR_NET_PASSWORD } = process.env;
+const {ACCESS_SECRET_KEY, REFRESH_SECRET_KEY, UKR_NET_EMAIL, UKR_NET_PASSWORD, FRONTENT_BASE_URL} = process.env;
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -16,8 +16,6 @@ const register = async (req, res) => {
     if (user) {
         res.status(409).json({ message: 'Email in use' });
         return;
-        // throw HttpError(409, "Email in use")
-
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -27,8 +25,9 @@ const register = async (req, res) => {
         id: newUser._id
     }
 
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
-    await User.findByIdAndUpdate(newUser._id, { token });
+     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
+    await User.findByIdAndUpdate(newUser._id, { accessToken,  refreshToken});
  
     res.status(201).json({
         user: {
@@ -38,7 +37,8 @@ const register = async (req, res) => {
             theme: newUser.theme,
             photo: newUser.photo 
         },
-        token
+        accessToken,
+        refreshToken
     })
 }
 
@@ -55,17 +55,17 @@ const login = async (req, res) => {
         res.status(401).json({ message: 'Email or password wrong' });
         return;
     } 
-    if (user.token) {
-        res.status(401).json({ message: 'This user is logged' });
-        return;
-    }
+    // if (user.token) {
+    //     res.status(401).json({ message: 'This user is logged' });
+    //     return;
+    // }
 
     const payload = {
         id: user._id
     }
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
-    await User.findByIdAndUpdate(user._id, { token });
-
+    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
+    await User.findByIdAndUpdate(user._id, { accessToken, refreshToken  });
     res.status(200).json({
         user: {
           id: user._id,
@@ -73,13 +73,55 @@ const login = async (req, res) => {
           theme: user.theme,
           photo: user.photo
         },
-        token
+        accessToken,
+        refreshToken
     })
+}
+
+const refresh = async (req, res) => {
+    const { refreshToken: token } = req.body;
+   
+    try {
+        const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
+        const isExist = await User.findOne({ refreshToken: token });
+       
+        if (!isExist) {
+            res.status(403).json({ message: "Token invalid" });
+            return
+        }
+        const payload = {
+             id
+        }
+        const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+        const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
+
+        res.status(200).json({
+            accessToken,
+            refreshToken
+        })
+
+    } catch (error) {
+        res.status(403).json({ message: error.message });
+        return;
+    }
+}
+
+const googleAuth = async (req, res) => {
+    const { _id: id } = req.user;
+    const payload = {
+        id
+    }
+   const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
+   await User.findByIdAndUpdate(id, { accessToken,  refreshToken});
+
+    res.redirect(`${FRONTENT_BASE_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`)
+
 }
 
 const logout = async (req, res) => {
     const { id } = req.user;
-    await User.findByIdAndUpdate(id, { token: "" });
+    await User.findByIdAndUpdate(id, { accessToken: "" });
     res.status(204).json({message: "No content"})
 }
 
@@ -187,11 +229,11 @@ const letter = async (req, res) => {
 export default {
     register,
     login,
+    refresh,
+    googleAuth,
     logout,
     current,
     update,
     updateTheme,
-    // uploadPhoto,
-    // updatePhoto,
     letter
 }

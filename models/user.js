@@ -13,7 +13,12 @@ const userSchema = new Schema({
         type: String,
         required: [true, 'Set password for user'],
     },
-    token: String,
+    accessToken: {
+        type: String
+    },
+    refreshToken: {
+        type:String
+    },
     theme: {
         type: String,
         enum: ['dark', 'light', 'violet'],
