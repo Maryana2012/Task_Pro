@@ -1,4 +1,4 @@
-import backgrounds from '../backgrounds/сollectionBackgrounds.js'
+import backgrounds from '../backgrounds/collectionBackgrounds.js'
 
 const getBackgroundPreviews = (req, res) => {
   try {

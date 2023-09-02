@@ -9,8 +9,7 @@ const boardSchema = new Schema({
         type: String,
     },
     background: {
-        type: String,
-        // type: Object,
+        type: Object,
     },
     ownerId: {
             type: String,

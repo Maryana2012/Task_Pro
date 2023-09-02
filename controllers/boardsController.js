@@ -1,5 +1,5 @@
 import Board from "../models/board.js";
-// import Background from "../models/background.js";
+import backgrounds from '../backgrounds/collectionBackgrounds.js'
 import HttpError from "../helpers/httpError.js";
 import mongoose from "mongoose";
 
@@ -20,38 +20,63 @@ const getAllBoards = async (req, res, next) => {
   }
 };
 
-
 const addBoard = async (req, res, next) => {
   try {
-    const { _id } = req.user;
+    // const { id } = req.user;
+    // console.log(id);
     const { title, icon, background } = req.body;
+    console.log(req.body);
+    // if (
+    //   !title ||
+    //   !title.trim() ||
+    //   !icon ||
+    //   !icon.trim() ||
+    //   !background ||
+    //   !background.trim()
+    // ) {
+    //   return res.status(400).json({ message: "All fields are required" });
+    // }
     if (
-      !title ||
-      !title.trim() ||
-      !icon ||
-      !icon.trim() ||
       !background ||
       !background.trim()
     ) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({ message: "background is required" });
     }
-    // const background = await Background.findById(backgroundId);
+    if (
+      !icon ||
+      !icon.trim()
+    ) {
+      return res.status(400).json({ message: "icon is required" });
+    }
 
-    // if (!background) {
-    //   return res.status(404).json({ message: "Background not found" });
-    // }
+    if (
+      !title ||
+      !title.trim() 
+    ) {
+      return res.status(400).json({ message: "title is required" });
+    }
+ 
+    console.log(title);
+    console.log(icon);
+    console.log(background);
+    const selectedBackground = backgrounds.find(bg => bg._id === background);
+    console.log("selectedBackground:", selectedBackground);
+
+    if (!selectedBackground) {
+      return res.status(404).json({ message: "Background not found" });
+    }
 
     const result = await Board.create({
       ...req.body,
-      ownerId: `${_id}`,
-      // background: background
+      // ownerId: `${id}`,
+      background: selectedBackground
     });
+
     res.status(201).json(result);
   } catch (error) {
     next(error);
   }
 };
-
 
 const getBoard = async (req, res, next) => {
   try {
@@ -69,34 +94,39 @@ const getBoard = async (req, res, next) => {
   }
 };
 
-
 const updateBoard = async (req, res, next) => {
   try {
     const { boardId } = req.params;
-    const { title, icon, background } = req.body;
+    const { title, icon, backgroundId } = req.body;
 
     const currentBoard = await Board.findById(boardId);
 
     if (!currentBoard) {
-      throw HttpError(404, "Not found");
+      throw HttpError(404, "Not found board");
     }
 
     const updatedFields = {};
 
-    if (title !== undefined && title.trim() && title !== currentBoard.title) {
+    if (title !== undefined && title.trim() !== currentBoard.title) {
       updatedFields.title = title;
     }
     if (icon !== undefined && icon !== currentBoard.icon) {
       updatedFields.icon = icon;
     }
-    if (background !== undefined && background !== currentBoard.background) {
-      updatedFields.background = background;
+
+    if (backgroundId !== undefined && backgroundId !== currentBoard.background._id) {
+      const foundBackground = backgrounds.find((bg) => bg._id === backgroundId);
+      if (foundBackground) {
+        updatedFields.background = foundBackground;
+      } else {
+        return res.status(400).json({ message: "Invalid background ID" });
+      }
     }
 
     if (Object.keys(updatedFields).length === 0) {
       return res
         .status(400)
-        .json({ message: "At least one field must be different" });
+        .json({ message: "No fields to update" });
     }
 
     const result = await Board.findByIdAndUpdate(boardId, updatedFields, {
@@ -108,7 +138,6 @@ const updateBoard = async (req, res, next) => {
     next(error);
   }
 };
-
 
 const deleteBoard = async (req, res, next) => {
   try {
@@ -213,7 +242,6 @@ const deleteColumn = async (req, res, next) => {
     next(error);
   }
 };
-
 
 export default {
   getAllBoards,

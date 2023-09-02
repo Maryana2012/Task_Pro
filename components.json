@@ -128,11 +128,7 @@
         }
       }
     },
-
-
-
-
-    "UpdateUserRequest": {
+    "UpdUserRequest": {
       "type": "object",
       "required": [],
       "properties": {
@@ -148,38 +144,20 @@
         "password": {
           "type": "string",
           "example": "777qwerty"
-        }
-      }
-    },
-
-    "UserResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "example": "7dh347fh4375fh45"
         },
-        "name": {
-          "type": "string",
-          "example": "Ivan Petrov"
-        },
-        "email": {
-          "type": "string",
-          "example": "ivan@example.com",
-          "format": "email"
-        },
-        "thema": {
+        "theme": {
           "type": "string",
           "example": "dark"
         },
         "photo": {
           "type": "string",
-          "example": "https://en.gravatar.com/"
+          "example": "https://..."
         }
       }
     },
-    "UpdateUserResponse": {
+    "UpdUserResponse": {
       "type": "object",
+      "required": [],
       "properties": {
         "name": {
           "type": "string",
@@ -193,11 +171,46 @@
         "password": {
           "type": "string",
           "example": "777qwerty"
+        },
+        "theme": {
+          "type": "string",
+          "example": "dark"
+        },
+        "photo": {
+          "type": "string",
+          "example": "https://..."
+        }
+      }
+    },
+    "UserLetterRequest": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "anton@example.com",
+          "format": "email"
+        },
+        "text": {
+          "type": "string",
+          "example": "Hello..."
+        }
+      }
+    },
+    "UserLetterResponse": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "anton@example.com",
+          "format": "email"
         }
       }
     },
 
-    "getBoardsResponse": {
+
+    "BoardsUserResponse": {
       "type": "object",
       "properties": {
         "title": {
@@ -217,8 +230,7 @@
         }
       }
     },
-
-    "postBoardRequest": {
+    "CreateBoardRequest": {
       "type": "object",
       "properties": {
         "title": {
@@ -247,8 +259,33 @@
           "example": "https://....."
         },
         "background": {
-          "type": "string",
-          "example": "https://....."
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "example": "backgroundId"
+            },
+            "desktopURL": {
+              "type": "string",
+              "example": "https://....."
+            },
+            "retinaURL": {
+              "type": "string",
+              "example": "https://....."
+            },
+            "tabletURL": {
+              "type": "string",
+              "example": "https://....."
+            },
+            "mobileURL": {
+              "type": "string",
+              "example": "https://....."
+            },
+            "previewURL": {
+              "type": "string",
+              "example": "https://....."
+            }
+          }
         },
         "ownerId": {
           "type": "string",
@@ -305,6 +342,39 @@
       }
     },
 
+
+    "TaskResponse": {
+      "type": "object",
+      "properties": {
+        "boardId": {
+          "type": "string",
+          "example": "boardId"
+        },
+        "columnId": {
+          "type": "string",
+          "example": "columnId"
+        },
+        "title": {
+          "type": "string",
+          "example": "Task Title"
+        },
+        "text": {
+          "type": "string",
+          "example": "Task Description"
+        },
+        "priority": {
+          "type": "string",
+          "example": "High"
+        },
+        "deadline": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-09-01T00:00:00Z"
+        }
+      }
+    },
+
+
     "userIdParameters": {
       "in": "path",
       "name": "id",
@@ -335,6 +405,13 @@
       },
       "description": "ID of the column to retrieve"
     },
+    "taskIdParameters": {
+      "in": "path",
+          "name": "taskId",
+          "required": true,
+          "schema": { "type": "string", "format": "ObjectId" },
+          "description": "ID of the task to update"
+    },
     "Token": {
       "type": "string",
       "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
@@ -348,7 +425,6 @@
         }
       }
     },
-
     "error400": {
       "type": "object",
       "properties": {
@@ -373,6 +449,15 @@
         "message": {
           "type": "string",
           "example": "forbidden"
+        }
+      }
+    },
+    "error404": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "not found"
         }
       }
     },
