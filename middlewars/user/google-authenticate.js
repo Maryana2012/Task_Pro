@@ -13,7 +13,7 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL } = process.env;
 const googleParams = {
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: `${BASE_URL}/users/google/callback`,
+    callbackURL: "https://task-pro-group-1-backend.onrender.com/users/google/callback",
     passReqToCallback: true
 }
 
