@@ -14,7 +14,7 @@ userRouter.post('/register', userValidators.isEmptyBody, userValidators.userRegi
 
 userRouter.post('/login', userValidators.isEmptyBody, userValidators.userLoginValidator, userControllers.login);
 
-// userRouter.post('/refresh',  userControllers.refresh)
+userRouter.post('/refresh',  userControllers.refresh)
 
 userRouter.post('/logout', userValidators.authenticate, userControllers.logout);
 

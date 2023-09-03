@@ -84,33 +84,33 @@ const login = async (req, res) => {
     })
 }
 
-// const refresh = async (req, res) => {
-//     const { refreshToken: token } = req.body;
+const refresh = async (req, res) => {
+    const { refreshToken: token } = req.body;
    
-//     try {
-//         const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
-//         const isExist = await User.findOne({ refreshToken: token });
+    try {
+        const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
+        const isExist = await User.findOne({ refreshToken: token });
        
-//         if (!isExist) {
-//             res.status(403).json({ message: "Token invalid" });
-//             return
-//         }
-//         const payload = {
-//              id
-//         }
-//         const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
-//         const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
+        if (!isExist) {
+            res.status(403).json({ message: "Token invalid" });
+            return
+        }
+        const payload = {
+             id
+        }
+        const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+        const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
 
-//         res.status(200).json({
-//             accessToken,
-//             refreshToken
-//         })
+        res.status(200).json({
+            accessToken,
+            refreshToken
+        })
 
-//     } catch (error) {
-//         res.status(403).json({ message: error.message });
-//         return;
-//     }
-// }
+    } catch (error) {
+        res.status(403).json({ message: error.message });
+        return;
+    }
+}
 
 const googleAuth = async (req, res) => {
     const { _id: id } = req.user;
@@ -219,7 +219,7 @@ const letter = async (req, res) => {
 export default {
     register,
     login,
-    // refresh,
+    refresh,
     googleAuth,
     logout,
     current,
