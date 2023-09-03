@@ -90,7 +90,7 @@ const refresh = async (req, res) => {
     try {
         const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
         const isExist = await User.findOne({ refreshToken: token });
-       
+       console.log(isExist)
         if (!isExist) {
             res.status(403).json({ message: "Token invalid" });
             return
@@ -100,7 +100,7 @@ const refresh = async (req, res) => {
         }
         const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
         const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
-
+        await User.findByIdAndUpdate(isExist._id, { accessToken, refreshToken });
         res.status(200).json({
             accessToken,
             refreshToken
