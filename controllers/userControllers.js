@@ -122,7 +122,7 @@ const googleAuth = async (req, res) => {
    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
    await User.findByIdAndUpdate(id, { accessToken,  refreshToken});
 
-    res.redirect(`${FRONTENT_BASE_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}&user=${user}`)
+    res.redirect(`${FRONTENT_BASE_URL}/auth?accessToken=${accessToken}&refreshToken=${refreshToken}&user=${user}`)
 
 }
 
