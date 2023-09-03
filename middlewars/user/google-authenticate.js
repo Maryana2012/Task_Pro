@@ -2,7 +2,7 @@ import {nanoid} from 'nanoid';
 import { Strategy } from 'passport-google-oauth2';
 import passport from 'passport';
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import User from '../../models/user.js'
@@ -21,7 +21,7 @@ const googleCallback = async (req, accessToken, refreshToken, profile, done) => 
     try {
         const { email, displayName } = profile;
         const user = await User.findOne({ email });
-
+        console.log(user)
         if (user) {
             return done(null, user);
         }

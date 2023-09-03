@@ -8,7 +8,7 @@ const userRouter = express.Router();
 
 userRouter.get('/google', passport.authenticate('google', { scope: ["email", "profile"] }));
 
-userRouter.get('/google/callback', passport.authenticate('google', {session : false}), userControllers.googleAuth)
+// userRouter.get('/google/callback', passport.authenticate('google', {session : false}), userControllers.googleAuth)
 
 userRouter.post('/register', userValidators.isEmptyBody, userValidators.userRegisterValidator, userControllers.register);
 
