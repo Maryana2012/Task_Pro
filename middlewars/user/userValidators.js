@@ -49,16 +49,16 @@ const userLoginValidator = (req, res, next) => {
 
 const authenticate = async (req, res, next) => {
     const { authorization = ""} = req.headers;
-    const [bearer, token] = authorization.split(" ");
+    const [bearer, accessToken] = authorization.split(" ");
     if (bearer !== "Bearer") {
         res.status(401).json({ message: `Not authorized` });
         return;
     }
     try {
-        const { id } = jwt.verify(token, SECRET_KEY);
+        const { id } = jwt.verify(accessToken, SECRET_KEY);
         const user = await User.findById(id);
        
-        if (!user || !user.token) {
+        if (!user || !user.accessToken) {
             res.status(401).json({ message: `Not authorized` });
             return;
       }
