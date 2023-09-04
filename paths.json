@@ -40,6 +40,14 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/error400"
+              },
+              "examples": {
+                "missing required fields": {
+                  "description": "",
+                  "value": {
+                    "message": "missing required /***/ field"
+                  }
+                }
               }
             }
           }
@@ -50,6 +58,14 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/error409"
+              }, 
+              "examples": {
+                "email is already in use": {
+                  "description": "",
+                  "value": {
+                    "message": "email in use"
+                  }
+                }
               }
             }
           }
@@ -79,7 +95,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
                 "properties": {
                   "user": {
                     "$ref": "#/components/schemas/LoginResponse"
@@ -98,6 +113,14 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/error400"
+              },
+              "examples": {
+                "missing required fields": {
+                  "description": "",
+                  "value": {
+                    "message": "missing required /***/ field"
+                  }
+                }
               }
             }
           }
@@ -110,22 +133,22 @@
                 "$ref": "#/components/schemas/error401"
               },
               "examples": {
-                "invalidCredentials": {
+                "no user found for this email": {
                   "description": "",
                   "value": {
-                    "message": "Email or password wrong"
+                    "message": "email or password wrong"
                   }
                 },
-                "passwordComparisonFailed": {
+                "wrong password": {
                   "description": "",
                   "value": {
-                    "message": "Email or password wrong"
+                    "message": "email or password wrong"
                   }
                 },
                 "userAlreadyLoggedIn": {
                   "description": "",
                   "value": {
-                    "message": "This user is logged"
+                    "message": "this user is logged"
                   }
                 }
               }
@@ -150,6 +173,16 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/res204"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unathorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error401"
               }
             }
           }
@@ -530,13 +563,34 @@
           }
         },
         "400": {
-          "$ref": "#/components/responses/BadRequestError"
+          "description": "Bad request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error400"
+              }
+            }
+          }
         },
         "401": {
-          "$ref": "#/components/responses/UnauthorizedError"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error401"
+              }
+            }
+          }
         },
         "404": {
-          "$ref": "#/components/responses/NotFoundError"
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error404"
+              }
+            }
+          }
         }
       }
     },
@@ -561,13 +615,34 @@
           }
         },
         "401": {
-          "$ref": "#/components/responses/UnauthorizedError"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error401"
+              }
+            }
+          }
         },
         "403": {
-          "$ref": "#/components/responses/UnauthorizedError"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error403"
+              }
+            }
+          }
         },
         "404": {
-          "$ref": "#/components/responses/NotFoundError"
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error404"
+              }
+            }
+          }
         }
       }
     }
@@ -600,13 +675,34 @@
           }
         },
         "400": {
-          "$ref": "#/components/responses/BadRequestError"
+          "description": "Bad request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error400"
+              }
+            }
+          }
         },
         "401": {
-          "$ref": "#/components/responses/UnauthorizedError"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error401"
+              }
+            }
+          }
         },
         "409": {
-          "$ref": "#/components/responses/ConflictError"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error409"
+              }
+            }
+          }
         }
       }
     }
@@ -643,7 +739,14 @@
           }
         },
         "404": {
-          "description": "Backgrounds not found"
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error404"
+              }
+            }
+          }
         },
         "500": {
           "description": "Internal Server Error"
@@ -682,13 +785,34 @@
           }
         },
         "400": {
-          "$ref": "#/components/responses/BadRequestError"
+          "description": "Bad request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error400"
+              }
+            }
+          }
         },
         "401": {
-          "$ref": "#/components/responses/UnauthorizedError"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error401"
+              }
+            }
+          }
         },
         "404": {
-          "$ref": "#/components/responses/NotFoundError"
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error404"
+              }
+            }
+          }
         }
       }
     },
@@ -716,10 +840,24 @@
           }
         },
         "401": {
-          "$ref": "#/components/responses/UnauthorizedError"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error401"
+              }
+            }
+          }
         },
         "404": {
-          "$ref": "#/components/responses/NotFoundError"
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error404"
+              }
+            }
+          }
         }
       }
     }
@@ -750,7 +888,14 @@
           }
         },
         "400": {
-          "$ref": "#/components/schemas/BadRequestError"
+          "description": "Bad request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error400"
+              }
+            }
+          }
         },
         "401": {
           "description": "Unauthorized",
@@ -812,7 +957,7 @@
       "tags": ["Tasks"],
       "summary": "Update a task by ID",
       "description": "This endpoint allows a user to update a task by its ID.",
-      "parameters": [{ "$ref": "#/components/schemas/boardIdParameters" }],
+      "parameters": [{ "$ref": "#/components/schemas/taskIdParameters" }],
       "security": [{ "Bearer": [] }],
       "requestBody": {
         "description": "Provide updated task information in the request body.",
@@ -833,13 +978,34 @@
           }
         },
         "400": {
-          "$ref": "#/components/schemas/BadRequestError"
+          "description": "Bad request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error400"
+              }
+            }
+          }
         },
         "401": {
-          "$ref": "#/components/schemas/UnauthorizedError"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error401"
+              }
+            }
+          }
         },
         "404": {
-          "$ref": "#/components/schemas/NotFoundError"
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error404"
+              }
+            }
+          }
         }
       }
     },
@@ -847,7 +1013,7 @@
       "tags": ["Tasks"],
       "summary": "Delete a task by ID",
       "description": "This endpoint allows a user to delete a task by its ID.",
-      "parameters": [{ "$ref": "#/components/schemas/boardIdParameters" }],
+      "parameters": [{ "$ref": "#/components/schemas/taskIdParameters" }],
       "security": [{ "Bearer": [] }],
       "responses": {
         "200": {
@@ -863,11 +1029,15 @@
             }
           }
         },
-        "401": {
-          "$ref": "#/components/schemas/UnauthorizedError"
-        },
         "404": {
-          "$ref": "#/components/schemas/NotFoundError"
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error404"
+              }
+            }
+          }
         }
       }
     }
@@ -877,15 +1047,7 @@
       "tags": ["Tasks"],
       "summary": "Move a task by ID",
       "description": "This endpoint allows a user to move a task by its ID to a different column.",
-      "parameters": [
-        {
-          "in": "path",
-          "name": "taskId",
-          "required": true,
-          "schema": { "type": "string", "format": "ObjectId" },
-          "description": "ID of the task to move"
-        }
-      ],
+      "parameters": [{ "$ref": "#/components/schemas/taskIdParameters" }],
       "security": [{ "Bearer": [] }],
       "requestBody": {
         "description": "Provide the ID of the new column in the request body.",
@@ -911,13 +1073,34 @@
           }
         },
         "400": {
-          "$ref": "#/components/schemas/BadRequestError"
+          "description": "Bad request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error400"
+              }
+            }
+          }
         },
         "401": {
-          "$ref": "#/components/schemas/UnauthorizedError"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error401"
+              }
+            }
+          }
         },
         "404": {
-          "$ref": "#/components/schemas/NotFoundError"
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error404"
+              }
+            }
+          }
         }
       }
     }
@@ -926,13 +1109,15 @@
     "get": {
       "tags": ["Tasks"],
       "summary": "Filter tasks by priority",
-      "description": "This endpoint allows a user to filter tasks by priority.",
+      "description": "This endpoint allows a user to filter tasks by priority. Available priorities: 'low', 'medium', 'high', 'without'",
       "security": [{ "Bearer": [] }],
       "parameters": [
         {
           "in": "query",
           "name": "priority",
-          "schema": { "type": "string" },
+          "schema": {
+            "$ref": "#/components/schemas/FilterPriorityParameter"
+          },
           "description": "Filter tasks by priority"
         }
       ],
@@ -949,7 +1134,24 @@
           }
         },
         "401": {
-          "$ref": "#/components/schemas/UnauthorizedError"
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/error404"
+              }
+            }
+          }
         }
       }
     }

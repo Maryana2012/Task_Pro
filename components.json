@@ -24,7 +24,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "example": "7dh347fh4375fh45"
+          "example": "64f49bbe12baf28b80b04763"
         },
         "name": {
           "type": "string",
@@ -41,7 +41,7 @@
         },
         "photo": {
           "type": "string",
-          "example": "https://..."
+          "example": ""
         }
       }
     },
@@ -343,6 +343,36 @@
     },
 
 
+    "TaskRequest": {
+      "type": "object",
+      "properties": {
+        "boardId": {
+          "type": "string",
+          "example": "boardId"
+        },
+        "columnId": {
+          "type": "string",
+          "example": "columnId"
+        },
+        "title": {
+          "type": "string",
+          "example": "Task Title"
+        },
+        "text": {
+          "type": "string",
+          "example": "Task Description"
+        },
+        "priority": {
+          "type": "string",
+          "example": "high"
+        },
+        "deadline": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-09-01T00:00:00Z"
+        }
+      }
+    },
     "TaskResponse": {
       "type": "object",
       "properties": {
@@ -364,7 +394,7 @@
         },
         "priority": {
           "type": "string",
-          "example": "High"
+          "example": "high"
         },
         "deadline": {
           "type": "string",
@@ -410,7 +440,11 @@
           "name": "taskId",
           "required": true,
           "schema": { "type": "string", "format": "ObjectId" },
-          "description": "ID of the task to update"
+          "description": "ID of the task"
+    },
+    "FilterPriorityParameter": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "without"]
     },
     "Token": {
       "type": "string",
@@ -421,7 +455,7 @@
       "properties": {
         "message": {
           "type": "string",
-          "example": "No content"
+          "example": "No Content"
         }
       }
     },
@@ -430,7 +464,7 @@
       "properties": {
         "message": {
           "type": "string",
-          "example": "bad request"
+          "example": "Bad Request"
         }
       }
     },
@@ -439,7 +473,7 @@
       "properties": {
         "message": {
           "type": "string",
-          "example": "unauthorized"
+          "example": "Not authorized"
         }
       }
     },
@@ -448,7 +482,7 @@
       "properties": {
         "message": {
           "type": "string",
-          "example": "forbidden"
+          "example": "Forbidden"
         }
       }
     },
@@ -457,7 +491,7 @@
       "properties": {
         "message": {
           "type": "string",
-          "example": "not found"
+          "example": "Not Found"
         }
       }
     },
@@ -466,7 +500,7 @@
       "properties": {
         "message": {
           "type": "string",
-          "example": "email in use"
+          "example": "conflict"
         }
       }
     }
