@@ -26,7 +26,7 @@ const taskSchema = new Schema({
     type: String,
     required: true
   }
-});
+}, { versionKey: false, timestamps: true });
 
 export const Task = model('Task', taskSchema);
 

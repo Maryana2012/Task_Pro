@@ -80,7 +80,7 @@ const getBoard = async (req, res, next) => {
 const updateBoard = async (req, res, next) => {
   try {
     const { boardId } = req.params;
-    const { title, icon, backgroundId } = req.body;
+    const { title, icon, background } = req.body;
 
     const currentBoard = await Board.findById(boardId);
 
@@ -97,8 +97,8 @@ const updateBoard = async (req, res, next) => {
       updatedFields.icon = icon;
     }
 
-    if (backgroundId !== undefined && backgroundId !== currentBoard.background._id) {
-      const foundBackground = backgrounds.find((bg) => bg._id === backgroundId);
+    if (background !== undefined && background !== currentBoard.background._id) {
+      const foundBackground = backgrounds.find((bg) => bg._id === background);
       if (foundBackground) {
         updatedFields.background = foundBackground;
       } else {
