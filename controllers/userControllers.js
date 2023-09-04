@@ -7,7 +7,7 @@ import User from '../models/user.js'
 
 dotenv.config();
 
-const {SECRET_KEY, ACCESS_SECRET_KEY, REFRESH_SECRET_KEY, UKR_NET_EMAIL, UKR_NET_PASSWORD, FRONTENT_BASE_URL} = process.env;
+const {ACCESS_SECRET_KEY, REFRESH_SECRET_KEY, UKR_NET_EMAIL, UKR_NET_PASSWORD, FRONTENT_BASE_URL} = process.env;
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -27,7 +27,7 @@ const register = async (req, res) => {
     // const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
     // await User.findByIdAndUpdate(newUser._id, { token });
 
-    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "1m" });
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
     await User.findByIdAndUpdate(newUser._id, { accessToken,  refreshToken});
  
@@ -68,7 +68,7 @@ const login = async (req, res) => {
     }
     // const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
     // await User.findByIdAndUpdate(user._id, { token });
-    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "1m" });
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
     await User.findByIdAndUpdate(user._id, { accessToken, refreshToken  });
     res.status(200).json({
@@ -98,7 +98,7 @@ const refresh = async (req, res) => {
         const payload = {
              id
         }
-        const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+        const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "1m" });
         const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
         await User.findByIdAndUpdate(isExist._id, { accessToken, refreshToken });
         res.status(200).json({
