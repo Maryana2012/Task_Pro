@@ -18,21 +18,37 @@ boardsController.getBoard);
 
 boardsRouter.put("/:boardId", 
 userValidators.authenticate,
- userValidators.isEmptyBody, 
+//  userValidators.isEmptyBody, 
 //  userValidators.isValidId, 
  boardsController.updateBoard);
 
 boardsRouter.delete("/:boardId", 
 userValidators.authenticate, 
-userValidators.isValidId, 
+// userValidators.isValidId, 
 boardsController.deleteBoard);
 
-boardsRouter.post('/:boardId/columns', userValidators.authenticate, userValidators.isEmptyBody, userValidators.isValidId, validateBody(boardsSchemas.addColumnSchema), boardsController.addColumn);
+boardsRouter.post('/:boardId/columns', 
+userValidators.authenticate, 
+// userValidators.isEmptyBody, 
+// userValidators.isValidId, 
+validateBody(boardsSchemas.addColumnSchema), 
+boardsController.addColumn);
 
-boardsRouter.patch('/:boardId/columns/:columnId', userValidators.authenticate, userValidators.isEmptyBody, userValidators.isValidId, validateBody(boardsSchemas.updateColumnSchema), boardsController.updateColumn);
+boardsRouter.patch('/:boardId/columns/:columnId', 
+userValidators.authenticate, 
+// userValidators.isEmptyBody, 
+// userValidators.isValidId, 
+validateBody(boardsSchemas.updateColumnSchema), 
+boardsController.updateColumn);
 
-boardsRouter.delete('/:boardId/columns/:columnId', userValidators.authenticate, userValidators.isValidId, boardsController.deleteColumn);
+boardsRouter.delete('/:boardId/columns/:columnId', 
+userValidators.authenticate, 
+// userValidators.isValidId, 
+boardsController.deleteColumn);
 
-boardsRouter.get('/:boardId/background', userValidators.authenticate, userValidators.isValidId, boardsController.getBackgroundPreviews);
+boardsRouter.get('/:boardId/background', 
+userValidators.authenticate, 
+// userValidators.isValidId, 
+boardsController.getBackgroundPreviews);
 
 export default boardsRouter;
