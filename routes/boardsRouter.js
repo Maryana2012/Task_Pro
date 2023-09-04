@@ -7,48 +7,14 @@ import validateBody from '../decorators/validateBody.js';
 
 const boardsRouter = express.Router();
 
-boardsRouter.get("/", userValidators.authenticate, boardsController.getAllBoards);
-
+boardsRouter.get("/", userValidators.authenticate,  boardsController.getAllBoards);
+boardsRouter.get('/background', userValidators.authenticate, boardsController.getBackgroundPreviews);
+boardsRouter.get("/:boardId", userValidators.authenticate, boardsController.getBoard);
 boardsRouter.post("/", userValidators.authenticate, validateBody(boardsSchemas.addBoardSchema), boardsController.addBoard);
-
-boardsRouter.get("/:boardId", 
-userValidators.authenticate, 
-// userValidators.isValidId, 
-boardsController.getBoard);
-
-boardsRouter.put("/:boardId", 
-userValidators.authenticate,
-//  userValidators.isEmptyBody, 
-//  userValidators.isValidId, 
- boardsController.updateBoard);
-
-boardsRouter.delete("/:boardId", 
-userValidators.authenticate, 
-// userValidators.isValidId, 
-boardsController.deleteBoard);
-
-boardsRouter.post('/:boardId/columns', 
-userValidators.authenticate, 
-// userValidators.isEmptyBody, 
-// userValidators.isValidId, 
-validateBody(boardsSchemas.addColumnSchema), 
-boardsController.addColumn);
-
-boardsRouter.patch('/:boardId/columns/:columnId', 
-userValidators.authenticate, 
-// userValidators.isEmptyBody, 
-// userValidators.isValidId, 
-validateBody(boardsSchemas.updateColumnSchema), 
-boardsController.updateColumn);
-
-boardsRouter.delete('/:boardId/columns/:columnId', 
-userValidators.authenticate, 
-// userValidators.isValidId, 
-boardsController.deleteColumn);
-
-boardsRouter.get('/:boardId/background', 
-userValidators.authenticate, 
-// userValidators.isValidId, 
-boardsController.getBackgroundPreviews);
+boardsRouter.put("/:boardId", userValidators.authenticate, boardsController.updateBoard);
+boardsRouter.delete("/:boardId", userValidators.authenticate, boardsController.deleteBoard);
+boardsRouter.post('/:boardId/columns', userValidators.authenticate, validateBody(boardsSchemas.addColumnSchema), boardsController.addColumn);
+boardsRouter.patch('/:boardId/columns/:columnId', userValidators.authenticate, validateBody(boardsSchemas.updateColumnSchema), boardsController.updateColumn);
+boardsRouter.delete('/:boardId/columns/:columnId', userValidators.authenticate, boardsController.deleteColumn);
 
 export default boardsRouter;
