@@ -7,7 +7,7 @@ import User from '../../models/user.js';
 
 
 dotenv.config();
-const { SECRET_KEY } = process.env;
+const { ACCESS_SECRET_KEY } = process.env;
 
 const isEmptyBody = (req, res, next) => {
     const keys = Object.keys(req.body);
@@ -55,7 +55,7 @@ const authenticate = async (req, res, next) => {
         return;
     }
     try {
-        const { id } = jwt.verify(accessToken, SECRET_KEY);
+        const { id } = jwt.verify(accessToken, ACCESS_SECRET_KEY);
         const user = await User.findById(id);
        
         if (!user || !user.accessToken) {
