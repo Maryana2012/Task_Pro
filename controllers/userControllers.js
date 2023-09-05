@@ -151,7 +151,7 @@ const current = async (req, res) => {
 
 const update = async (req, res) => {
     const { id } = req.params;
-    const { name, email, password,photo } = req.body;
+    const { name, email, password, photo } = req.file;
     // const cloudinaryImageUrl = req.b;
    console.log(name)
     const user = await User.findById(id);
@@ -162,7 +162,7 @@ const update = async (req, res) => {
     }
     
     const hashPassword = await bcrypt.hash(password, 10);
-    const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword}, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword},  { new: true });
     
     res.status(200).json({
         user: {
