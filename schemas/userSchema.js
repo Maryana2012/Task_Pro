@@ -17,9 +17,8 @@ const userUpdateSchema = Joi.object({
     name: Joi.string(),
     email: Joi.string().email(),
     password: Joi.string(),
-    photo: Joi.string()
+    photo: Joi.binary()
 })
-
 const userThemeSchema = Joi.object({
     theme: Joi.string().valid('dark', 'light', 'violet').required()
 });
