@@ -151,15 +151,16 @@ const current = async (req, res) => {
 
 const update = async (req, res) => {
     const { id } = req.params;
-    const { name, email, password } = req.body;
-    // const cloudinaryImageUrl = req.file.path;
+    const { name, email, password,photo } = req.body;
+    // const cloudinaryImageUrl = req.b;
    console.log(name)
     const user = await User.findById(id);
 
     if (!user) {
         res.status(401).json({ message: `User with ${id} not found` });
         return;
-    } 
+    }
+    
     const hashPassword = await bcrypt.hash(password, 10);
     const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword, photo: cloudinaryImageUrl}, { new: true });
     
