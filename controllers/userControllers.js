@@ -150,9 +150,10 @@ const current = async (req, res) => {
 };
 
 const update = async (req, res) => {
-    const { id } = req.params;
-    const { name, email, password, photo } = req.file;
-    // const cloudinaryImageUrl = req.b;
+    // const { id } = req.params;
+    const { name, email, password } = req.body;
+    const { id } = req.user;
+    const cloudinaryImageUrl = req.file;
    console.log(name)
     const user = await User.findById(id);
 
