@@ -5,7 +5,7 @@
       "summary": "Register a new user",
       "parameters": [],
       "requestBody": {
-        "description": "This endpoint allows users to register by providing their name, email, and password in the request body.",
+        "description": "This endpoint allows users to register by providing their name, email, and password in the request body. The email must be unique, meaning it should not be duplicated among existing users.",
         "required": true,
         "content": {
           "application/json": {
@@ -39,13 +39,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
-              },
-              "examples": {
-                "missing required fields": {
-                  "description": "",
-                  "value": {
-                    "message": "missing required /***/ field"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "missing required /***/ field"
                   }
                 }
               }
@@ -57,13 +55,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error409"
-              }, 
-              "examples": {
-                "email is already in use": {
-                  "description": "",
-                  "value": {
-                    "message": "email in use"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "email in use"
                   }
                 }
               }
@@ -112,13 +108,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
-              },
-              "examples": {
-                "missing required fields": {
-                  "description": "",
-                  "value": {
-                    "message": "missing required /***/ field"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "missing required /***/ field"
                   }
                 }
               }
@@ -144,12 +138,6 @@
                   "value": {
                     "message": "email or password wrong"
                   }
-                },
-                "userAlreadyLoggedIn": {
-                  "description": "",
-                  "value": {
-                    "message": "this user is logged"
-                  }
                 }
               }
             }
@@ -168,21 +156,20 @@
 
       "responses": {
         "204": {
-          "description": "No Content",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/res204"
-              }
-            }
-          }
+          "description": "No Content"
         },
         "401": {
-          "description": "Unathorized",
+          "description": "Unauthorized",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "invalid signature"
+                  }
+                }
               }
             }
           }
@@ -257,7 +244,7 @@
       ],
       "responses": {
         "200": {
-          "description": "User theme updated successfully",
+          "description": "Ok",
           "content": {
             "application/json": {
               "schema": {
@@ -271,7 +258,13 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "select theme from [dark, light, violet]"
+                  }
+                }
               }
             }
           }
@@ -327,13 +320,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
-              },
-              "examples": {
-                "!user": {
-                  "description": "",
-                  "value": {
-                    "message": "user with id not found"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "user with /id/ not found"
                   }
                 }
               }
@@ -363,7 +354,7 @@
           "content": {
             "application/json": {
               "example": {
-                "message": "Letter sent"
+                "message": "letter sent"
               }
             }
           }
@@ -412,7 +403,7 @@
                 "properties": {
                   "message": {
                     "type": "string",
-                    "example": "Invalid signature"
+                    "example": "invalid signature"
                   }
                 }
               }
@@ -449,6 +440,22 @@
             }
           }
         },
+        "400": {
+          "description": "Bad request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "missing required /***/ field"
+                  }
+                }
+              }
+            }
+          }
+        },
         "401": {
           "description": "Unauthorized",
           "content": {
@@ -458,7 +465,7 @@
                 "properties": {
                   "message": {
                     "type": "string",
-                    "example": "Invalid signature"
+                    "example": "invalid signature"
                   }
                 }
               }
@@ -474,7 +481,23 @@
                 "properties": {
                   "message": {
                     "type": "string",
-                    "example": "Not Found"
+                    "example": "background not found"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "Conflict",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "a board with the same title already exists"
                   }
                 }
               }
@@ -511,7 +534,7 @@
                 "properties": {
                   "message": {
                     "type": "string",
-                    "example": "Invalid signature"
+                    "example": "invalid signature"
                   }
                 }
               }
@@ -527,7 +550,7 @@
                 "properties": {
                   "message": {
                     "type": "string",
-                    "example": "Not Found"
+                    "example": "not found"
                   }
                 }
               }
@@ -567,7 +590,13 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": " no fields to update"
+                  }
+                }
               }
             }
           }
@@ -577,7 +606,13 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "invalid signature"
+                  }
+                }
               }
             }
           }
@@ -588,12 +623,29 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/error404"
+              },
+              "examples": {
+                "no found board": {
+                  "description": "",
+                  "value": {
+                    "message": "not found board"
+                  }
+                },
+                "wrong password": {
+                  "description": "",
+                  "value": {
+                    "message": "email or password wrong"
+                  }
+                }
               }
             }
           }
         }
       }
     },
+
+---------------------------!!!!!!!-------------------
+
     "delete": {
       "tags": ["Boards"],
       "summary": "Delete board by ID",

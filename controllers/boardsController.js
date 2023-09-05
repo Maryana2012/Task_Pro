@@ -38,7 +38,12 @@ const addBoard = async (req, res, next) => {
     ) {
       return res.status(400).json({ message: "title is required" });
     }
-   
+    const board = await Board.findOne({ title });
+    if (board) {
+      res.status(409).json({ message: 'A board with the same title already exists' });
+      return;
+  }
+
     let selectedBackground = null;
 
     if (background && background.trim() !== "null") {

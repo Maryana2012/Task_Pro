@@ -145,10 +145,6 @@
           "type": "string",
           "example": "777qwerty"
         },
-        "theme": {
-          "type": "string",
-          "example": "dark"
-        },
         "photo": {
           "type": "string",
           "example": "https://..."
@@ -243,7 +239,7 @@
         },
         "background": {
           "type": "string",
-          "example": "https://....."
+          "example": "background#"
         }
       }
     },
@@ -269,7 +265,7 @@
               "type": "string",
               "example": "https://....."
             },
-            "retinaURL": {
+            "desktopRetainaURL": {
               "type": "string",
               "example": "https://....."
             },
@@ -277,7 +273,15 @@
               "type": "string",
               "example": "https://....."
             },
+            "tabletRetinaURL": {
+              "type": "string",
+              "example": "https://....."
+            },
             "mobileURL": {
+              "type": "string",
+              "example": "https://....."
+            },
+            "mobileRetinaURL": {
               "type": "string",
               "example": "https://....."
             },

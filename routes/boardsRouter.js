@@ -8,9 +8,9 @@ import validateBody from '../decorators/validateBody.js';
 const boardsRouter = express.Router();
 
 boardsRouter.get("/", userValidators.authenticate,  boardsController.getAllBoards);
+boardsRouter.post("/", userValidators.authenticate, validateBody(boardsSchemas.addBoardSchema), boardsController.addBoard);
 boardsRouter.get('/background', userValidators.authenticate, boardsController.getBackgroundPreviews);
 boardsRouter.get("/:boardId", userValidators.authenticate, boardsController.getBoard);
-boardsRouter.post("/", userValidators.authenticate, validateBody(boardsSchemas.addBoardSchema), boardsController.addBoard);
 boardsRouter.put("/:boardId", userValidators.authenticate, boardsController.updateBoard);
 boardsRouter.delete("/:boardId", userValidators.authenticate, boardsController.deleteBoard);
 boardsRouter.post('/:boardId/columns', userValidators.authenticate, validateBody(boardsSchemas.addColumnSchema), boardsController.addColumn);
