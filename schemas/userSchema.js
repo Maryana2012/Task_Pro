@@ -14,24 +14,26 @@ const userLoginSchema = Joi.object({
 });
 
 const userUpdateSchema = Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-    photo: Joi.string()
+    name: Joi.string(),
+    email: Joi.string().email(),
+    password: Joi.string(),
+    photo: Joi.binary()
 })
-
 const userThemeSchema = Joi.object({
     theme: Joi.string().valid('dark', 'light', 'violet').required()
 });
 
-// const userPhotoSchema = Joi.object({
-//     photo: Joi.string()
-// })   
+const userLetterSchema = Joi.object({
+    email: Joi.string().email().required(),
+    text: Joi.string().required()
+});
+ 
 
 export default {
     userRegisterSchema,
     userLoginSchema,
     userThemeSchema,
     userUpdateSchema,
+    userLetterSchema
     // userPhotoSchema
 }

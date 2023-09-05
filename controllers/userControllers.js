@@ -90,7 +90,7 @@ const refresh = async (req, res) => {
     try {
         const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
         const isExist = await User.findOne({ refreshToken: token });
-       console.log(isExist)
+       
         if (!isExist) {
             res.status(403).json({ message: "Token invalid" });
             return
@@ -150,18 +150,20 @@ const current = async (req, res) => {
 };
 
 const update = async (req, res) => {
-    const { id } = req.params;
+    // const { id } = req.params;
     const { name, email, password } = req.body;
-    const cloudinaryImageUrl = req.file.path;
-   
+    const { id } = req.user;
+    const cloudinaryImageUrl = req.file;
+   console.log(name)
     const user = await User.findById(id);
 
     if (!user) {
         res.status(401).json({ message: `User with ${id} not found` });
         return;
-    } 
+    }
+    
     const hashPassword = await bcrypt.hash(password, 10);
-    const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword, photo: cloudinaryImageUrl}, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword},  { new: true });
     
     res.status(200).json({
         user: {
@@ -171,15 +173,20 @@ const update = async (req, res) => {
             password: updatedUser.password,
             theme: user.theme,
             photo: updatedUser.photo
-        }, accessToken
+        }
     });
 }
 
 const updateTheme = async (req, res) => {
     const { theme } = req.body;
-    const { id } = req.params;
-   
-    await User.findByIdAndUpdate(id,  {theme:theme}, {new:true} );
+    // const { id } = req.params;
+     const { id } = req.user;
+    const user = await User.findByIdAndUpdate(id, { theme: theme }, { new: true });
+ 
+    if (!user) {
+        res.status(401).json({ message: `User with ${id} not found` });
+        return;
+    }
     res.status(200).json({
         id,
         theme

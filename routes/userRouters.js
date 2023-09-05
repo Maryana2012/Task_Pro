@@ -1,7 +1,8 @@
 import express from 'express';
 import userControllers from '../controllers/userControllers.js';
 import userValidators from '../middlewars/user/userValidators.js';
-import passport from '../middlewars/user/google-authenticate.js'
+import passport from '../middlewars/user/google-authenticate.js';
+import uploadCloud from '../middlewars/user/cloudinary.js';
 
 
 const userRouter = express.Router();
@@ -20,12 +21,12 @@ userRouter.post('/logout', userValidators.authenticate, userControllers.logout);
 
 userRouter.get('/current', userValidators.authenticate, userControllers.current);
 
-userRouter.put('/:id/update', userValidators.isEmptyBody, userValidators.isValidId, userValidators.authenticate, userValidators.userUpdateValidator,  userControllers.update);
+userRouter.put('/update', userValidators.isEmptyBody,  userValidators.userUpdateValidator, uploadCloud.single('photo'), userControllers.update);
 
-userRouter.patch('/:id/theme', userValidators.isEmptyBody, userValidators.isValidId, userValidators.authenticate, userValidators.isTheme, userControllers.updateTheme);
+userRouter.patch('/theme', userValidators.isEmptyBody, userValidators.authenticate, userValidators.isTheme, userControllers.updateTheme);
 
 // userRouter.patch('/:id/photo',userValidators.userUpdatePhoto, uploadCloud.single('photo'), userControllers.updatePhoto);
 
-userRouter.post('/letter',  userValidators.isEmptyBody, userControllers.letter )
+userRouter.post('/letter', userValidators.isEmptyBody, userValidators.userLetter, userControllers.letter);
 
 export default userRouter;
