@@ -26,7 +26,7 @@ const userSchema = new Schema({
         default: 'dark'
     },
     photo: {
-        type: String,
+        type: Object,
     }
 
 }, { versionKey: false, timestamps: true  })
