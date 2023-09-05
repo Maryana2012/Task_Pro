@@ -28,7 +28,7 @@ const register = async (req, res) => {
     // await User.findByIdAndUpdate(newUser._id, { token });
 
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "23h" });
-    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "1h" });
+    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
     await User.findByIdAndUpdate(newUser._id, { accessToken,  refreshToken});
  
     res.status(201).json({
@@ -69,7 +69,7 @@ const login = async (req, res) => {
     // const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
     // await User.findByIdAndUpdate(user._id, { token });
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "23h" });
-    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "1h" });
+    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
     await User.findByIdAndUpdate(user._id, { accessToken, refreshToken  });
     res.status(200).json({
         user: {
@@ -99,7 +99,7 @@ const refresh = async (req, res) => {
              id
         }
         const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "23h" });
-        const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "1h" });
+        const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
         await User.findByIdAndUpdate(isExist._id, { accessToken, refreshToken });
         res.status(200).json({
             accessToken,
@@ -119,7 +119,7 @@ const googleAuth = async (req, res) => {
     }
     const user = req.user;
    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "23h" });
-   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "1h" });
+   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
    await User.findByIdAndUpdate(id, { accessToken,  refreshToken});
 
     res.redirect(`${FRONTENT_BASE_URL}/auth/register?accessToken=${accessToken}&refreshToken=${refreshToken}&user=${user}`)

@@ -87,7 +87,7 @@
       },
       "responses": {
         "200": {
-          "description": "Successful operation",
+          "description": "Ok",
           "content": {
             "application/json": {
               "schema": {
@@ -415,7 +415,7 @@
     "post": {
       "tags": ["Boards"],
       "summary": "Create a new board",
-      "description": "This endpoint allows a logged-in user to create a new board.",
+      "description": "This endpoint allows a logged-in user to create a new board. The board name should be unique",
       "parameters": [],
       "security": [{ "Bearer": [] }],
       "requestBody": {
@@ -507,6 +507,71 @@
       }
     }
   },
+  "/boards/background": {
+    "get": {
+      "tags": ["Boards"],
+      "summary": "Get background previews for a board",
+      "description": "This endpoint allows an authenticated user to retrieve background previews for a specific board. It returns an array of objects containing background IDs and their corresponding preview URLs.",
+      "security": [{ "Bearer": [] }],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "backgroundId"
+                    },
+                    "previewURL": {
+                      "type": "string",
+                      "example": "https://..."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "invalid signature"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "background not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "/boards/{boardId}": {
     "get": {
       "tags": ["Boards"],
@@ -550,7 +615,7 @@
                 "properties": {
                   "message": {
                     "type": "string",
-                    "example": "not found"
+                    "example": "board not found"
                   }
                 }
               }
@@ -571,7 +636,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/putBoardRequest"
+              "$ref": "#/components/schemas/updateBoardRequest"
             }
           }
         }
@@ -625,10 +690,10 @@
                 "$ref": "#/components/schemas/error404"
               },
               "examples": {
-                "no found board": {
+                "board not found": {
                   "description": "",
                   "value": {
-                    "message": "not found board"
+                    "message": "board not found"
                   }
                 },
                 "wrong password": {
@@ -643,9 +708,6 @@
         }
       }
     },
-
----------------------------!!!!!!!-------------------
-
     "delete": {
       "tags": ["Boards"],
       "summary": "Delete board by ID",
@@ -660,7 +722,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "message": { "type": "string", "example": "Board deleted" }
+                  "message": { "type": "string", "example": "board deleted" }
                 }
               }
             }
@@ -671,17 +733,29 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "invalid signature"
+                  }
+                }
               }
             }
           }
         },
         "403": {
-          "description": "Unauthorized",
+          "description": "Forbidden",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error403"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "invalid boardId"
+                  }
+                }
               }
             }
           }
@@ -691,7 +765,13 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error404"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "board not found"
+                  }
+                }
               }
             }
           }
@@ -703,7 +783,7 @@
     "post": {
       "tags": ["Boards"],
       "summary": "Add column to board",
-      "description": "This endpoint allows a user to add a new column to a specific board.",
+      "description": "This endpoint allows a user to add a new column to a specific board. The column name should be unique",
       "parameters": [{ "$ref": "#/components/schemas/boardIdParameters" }],
       "security": [{ "Bearer": [] }],
       "requestBody": {
@@ -712,7 +792,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/postColumnRequest"
+              "$ref": "#/components/schemas/CreateColumnRequest"
             }
           }
         }
@@ -731,7 +811,13 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "missing required title field"
+                  }
+                }
               }
             }
           }
@@ -741,67 +827,32 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
-              }
-            }
-          }
-        },
-        "409": {
-          "description": "Unauthorized",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/error409"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/boards/{boardId}/background": {
-    "get": {
-      "tags": ["Boards"],
-      "summary": "Get background previews for a board",
-      "description": "This endpoint allows a user to retrieve background previews for a specific board.",
-      "parameters": [{ "$ref": "#/components/schemas/boardIdParameters" }],
-      "security": [{ "Bearer": [] }],
-      "responses": {
-        "200": {
-          "description": "OK",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "string",
-                      "example": "backgroundId"
-                    },
-                    "previewURL": {
-                      "type": "string",
-                      "example": "https://..."
-                    }
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "invalid signature"
                   }
                 }
               }
             }
           }
         },
-        "404": {
-          "description": "Not Found",
+        "409": {
+          "description": "Conflict",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error404"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "a column with the title /***/ already exists"
+                  }
+                }
               }
             }
           }
-        },
-        "500": {
-          "description": "Internal Server Error"
         }
       }
     }
@@ -822,7 +873,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/postColumnRequest"
+              "$ref": "#/components/schemas/UpdateColumnRequest"
             }
           }
         }
@@ -841,51 +892,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "Unauthorized",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/error401"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "Not Found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/error404"
-              }
-            }
-          }
-        }
-      }
-    },
-    "delete": {
-      "tags": ["Boards"],
-      "summary": "Delete column by ID",
-      "description": "This endpoint allows a user to delete a specific column of a board by its ID.",
-      "parameters": [
-        { "$ref": "#/components/schemas/boardIdParameters" },
-        { "$ref": "#/components/schemas/columnIdParameters" }
-      ],
-      "security": [{ "Bearer": [] }],
-      "responses": {
-        "200": {
-          "description": "OK",
-          "content": {
-            "application/json": {
-              "schema": {
                 "type": "object",
                 "properties": {
-                  "message": { "type": "string", "example": "Column deleted" }
+                  "message": {
+                    "type": "string",
+                    "example": "missing required title field"
+                  }
                 }
               }
             }
@@ -896,7 +908,13 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "invalid signature"
+                  }
+                }
               }
             }
           }
@@ -906,7 +924,65 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error404"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "column not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["Boards"],
+      "summary": "Delete column by ID",
+      "description": "This endpoint allows a user to delete a specific column of a board by its ID. In response to a successful request to delete a column, the deleted object is returned.",
+      "parameters": [
+        { "$ref": "#/components/schemas/boardIdParameters" },
+        { "$ref": "#/components/schemas/columnIdParameters" }
+      ],
+      "security": [{ "Bearer": [] }],
+      "responses": {
+        "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ColumnResponse" }
+              }
+            }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "invalid signature"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "column not found"
+                  }
+                }
               }
             }
           }

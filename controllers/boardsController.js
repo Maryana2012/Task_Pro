@@ -29,14 +29,14 @@ const addBoard = async (req, res, next) => {
       !icon ||
       !icon.trim()
     ) {
-      return res.status(400).json({ message: "icon is required" });
+      return res.status(400).json({ message: "Icon is required" });
     }
 
     if (
       !title ||
       !title.trim() 
     ) {
-      return res.status(400).json({ message: "title is required" });
+      return res.status(400).json({ message: "Title is required" });
     }
     const board = await Board.findOne({ title });
     if (board) {
@@ -74,7 +74,7 @@ const getBoard = async (req, res, next) => {
     const result = await Board.findById(boardId);
 
     if (!result) {
-      throw HttpError(404, "Not found");
+      throw HttpError(404, "Board not found");
     }
     res.json(result);
   } catch (error) {
@@ -90,7 +90,7 @@ const updateBoard = async (req, res, next) => {
     const currentBoard = await Board.findById(boardId);
 
     if (!currentBoard) {
-      throw HttpError(404, "Not found board");
+      throw HttpError(404, "Board not found");
     }
 
     const updatedFields = {};
@@ -139,7 +139,7 @@ const deleteBoard = async (req, res, next) => {
     }
     const result = await Board.findByIdAndDelete(boardId);
     if (!result) {
-      throw HttpError(404, "Not found");
+      throw HttpError(404, "Board not found");
     }
     res.json({
       message: "Board deleted",
@@ -166,7 +166,7 @@ const addColumn = async (req, res, next) => {
     if (existingColumn) {
       return res
         .status(409)
-        .json({ message: `A column with the name "${title}" already exists` });
+        .json({ message: `A column with the title \"${title}"\ already exists` });
     }
 
     board.columns.push({ title, boardId: boardId });

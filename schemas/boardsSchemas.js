@@ -3,8 +3,7 @@ import Joi from 'joi';
 const addBoardSchema = Joi.object({
     title: Joi.string().required(),
     icon: Joi.string().required(),
-    background: Joi.string().required(),
-    // ownerId: Joi.string().required(),
+    background: Joi.string()
 })
 
 const addColumnSchema = Joi.object({

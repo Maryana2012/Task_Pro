@@ -301,7 +301,7 @@
         }
       }
     },
-    "putBoardRequest": {
+    "updateBoardRequest": {
       "type": "object",
       "properties": {
         "title": {
@@ -318,7 +318,7 @@
         }
       }
     },
-    "postColumnRequest": {
+    "CreateColumnRequest": {
       "type": "object",
       "properties": {
         "title": {
@@ -345,8 +345,17 @@
         }
       }
     },
+    "UpdateColumnRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "New column - 1"
+        }
+      }
+    },
 
-
+    
     "TaskRequest": {
       "type": "object",
       "properties": {
@@ -504,7 +513,7 @@
       "properties": {
         "message": {
           "type": "string",
-          "example": "conflict"
+          "example": "Conflict"
         }
       }
     }
