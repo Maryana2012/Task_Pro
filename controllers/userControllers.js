@@ -172,7 +172,7 @@ const update = async (req, res) => {
             password: updatedUser.password,
             theme: user.theme,
             photo: updatedUser.photo
-        }, accessToken
+        }
     });
 }
 
