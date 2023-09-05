@@ -16,7 +16,7 @@ const userLoginSchema = Joi.object({
 const userUpdateSchema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    password: Joi.string(),
     photo: Joi.string()
 })
 
