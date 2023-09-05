@@ -24,14 +24,17 @@ const userThemeSchema = Joi.object({
     theme: Joi.string().valid('dark', 'light', 'violet').required()
 });
 
-// const userPhotoSchema = Joi.object({
-//     photo: Joi.string()
-// })   
+const userLetterSchema = Joi.object({
+    email: Joi.string().email().required(),
+    text: Joi.string().required()
+});
+ 
 
 export default {
     userRegisterSchema,
     userLoginSchema,
     userThemeSchema,
     userUpdateSchema,
+    userLetterSchema
     // userPhotoSchema
 }

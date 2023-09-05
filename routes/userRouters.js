@@ -26,6 +26,6 @@ userRouter.patch('/:id/theme', userValidators.isEmptyBody, userValidators.isVali
 
 // userRouter.patch('/:id/photo',userValidators.userUpdatePhoto, uploadCloud.single('photo'), userControllers.updatePhoto);
 
-userRouter.post('/letter',  userValidators.isEmptyBody, userControllers.letter )
+userRouter.post('/letter', userValidators.isEmptyBody, userValidators.userLetter, userControllers.letter);
 
 export default userRouter;

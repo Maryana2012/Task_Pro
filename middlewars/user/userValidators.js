@@ -100,7 +100,7 @@ const isTheme = (req, res, next) => {
 const userUpdateValidator = (req, res, next) => {
   const { error } = userSchema.userUpdateSchema.validate(req.body);
   if (error) {
-    res.status(400).json({ message: 'select theme from [dark, light, violet]' });
+    res.status(400).json({ message: error.message });
     return;
   }
   next();
@@ -108,6 +108,18 @@ const userUpdateValidator = (req, res, next) => {
 
 const userUpdatePhoto = (req, res, next) => {
   const { error } = userSchema.userPhotoSchema.validate(req);
+  if (error) {
+    res.status(400).json({ message: error.message  });
+    return;
+  }
+  next();
+}
+
+
+const userLetter = (req, res, next) => {
+  console.log(req.body)
+  const { error } = userSchema.userLetterSchema.validate(req.body);
+  console.log(error)
   if (error) {
     res.status(400).json({ message: error.message  });
     return;
@@ -125,5 +137,6 @@ export default {
   isValidId,
   isTheme,
   userUpdateValidator,
-  userUpdatePhoto
+  userUpdatePhoto,
+  userLetter
 }

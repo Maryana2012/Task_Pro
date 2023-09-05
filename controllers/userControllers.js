@@ -68,7 +68,7 @@ const login = async (req, res) => {
     }
     // const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
     // await User.findByIdAndUpdate(user._id, { token });
-    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "1m" });
+    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
     await User.findByIdAndUpdate(user._id, { accessToken, refreshToken  });
     res.status(200).json({
@@ -98,7 +98,7 @@ const refresh = async (req, res) => {
         const payload = {
              id
         }
-        const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "1m" });
+        const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
         const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
         await User.findByIdAndUpdate(isExist._id, { accessToken, refreshToken });
         res.status(200).json({
@@ -118,7 +118,7 @@ const googleAuth = async (req, res) => {
         id
     }
     const user = req.user;
-   const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "1m" });
+   const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
    await User.findByIdAndUpdate(id, { accessToken,  refreshToken});
 
@@ -179,7 +179,12 @@ const updateTheme = async (req, res) => {
     const { theme } = req.body;
     const { id } = req.params;
    
-    await User.findByIdAndUpdate(id,  {theme:theme}, {new:true} );
+    const user = await User.findByIdAndUpdate(id, { theme: theme }, { new: true });
+ 
+    if (!user) {
+        res.status(401).json({ message: `User with ${id} not found` });
+        return;
+    }
     res.status(200).json({
         id,
         theme
