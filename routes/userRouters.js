@@ -22,7 +22,7 @@ userRouter.get('/current', userValidators.authenticate, userControllers.current)
 
 userRouter.put('/:id/update', userValidators.isEmptyBody,  userValidators.userUpdateValidator,  userControllers.update);
 
-userRouter.patch('/:id/theme', userValidators.isEmptyBody, userValidators.isValidId, userValidators.authenticate, userValidators.isTheme, userControllers.updateTheme);
+userRouter.patch('/theme', userValidators.isEmptyBody, userValidators.authenticate, userValidators.isTheme, userControllers.updateTheme);
 
 // userRouter.patch('/:id/photo',userValidators.userUpdatePhoto, uploadCloud.single('photo'), userControllers.updatePhoto);
 

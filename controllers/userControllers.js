@@ -178,8 +178,8 @@ const update = async (req, res) => {
 
 const updateTheme = async (req, res) => {
     const { theme } = req.body;
-    const { id } = req.params;
-   
+    // const { id } = req.params;
+     const { id } = req.user;
     const user = await User.findByIdAndUpdate(id, { theme: theme }, { new: true });
  
     if (!user) {
