@@ -186,6 +186,7 @@ const updateUserPhoto = async (req, res) => {
         res.status(401).json({ message: `User with ${id} not found` });
         return;
     }
+    console.log(cloudinaryImageUrl)
    const newUser =  await User.findByIdAndUpdate(id, { photo: cloudinaryImageUrl }, {new:true});
     res.status(200).json({
         id,
