@@ -172,7 +172,7 @@ const update = async (req, res) => {
             email: updatedUser.email,
             password: updatedUser.password,
             theme: user.theme,
-            photo: updatedUser.photo
+            
         }
     });
 }
@@ -189,7 +189,7 @@ const updateUserPhoto = async (req, res) => {
     await User.findByIdAndUpdate(id, { photo: cloudinaryImageUrl }, {new:true});
     res.status(200).json({
         id,
-        photo
+        photo: user.photo
     })
 }
 
