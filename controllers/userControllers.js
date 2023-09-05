@@ -186,10 +186,10 @@ const updateUserPhoto = async (req, res) => {
         res.status(401).json({ message: `User with ${id} not found` });
         return;
     }
-    await User.findByIdAndUpdate(id, { photo: cloudinaryImageUrl }, {new:true});
+   const newUser =  await User.findByIdAndUpdate(id, { photo: cloudinaryImageUrl }, {new:true});
     res.status(200).json({
         id,
-        photo: user.photo
+        photo: newUser.photo
     })
 }
 
