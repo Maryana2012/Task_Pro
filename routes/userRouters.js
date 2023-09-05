@@ -1,7 +1,8 @@
 import express from 'express';
 import userControllers from '../controllers/userControllers.js';
 import userValidators from '../middlewars/user/userValidators.js';
-import passport from '../middlewars/user/google-authenticate.js'
+import passport from '../middlewars/user/google-authenticate.js';
+import uploadCloud from '../middlewars/user/cloudinary.js';
 
 
 const userRouter = express.Router();
