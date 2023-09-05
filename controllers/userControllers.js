@@ -153,8 +153,8 @@ const update = async (req, res) => {
     // const { id } = req.params;
     const { name, email, password } = req.body;
     const { id } = req.user;
-    const cloudinaryImageUrl = req.file;
-   console.log(name)
+    // const cloudinaryImageUrl = req.file;
+//    console.log(name)
     const user = await User.findById(id);
 
     if (!user) {
@@ -175,6 +175,22 @@ const update = async (req, res) => {
             photo: updatedUser.photo
         }
     });
+}
+
+const updateUserPhoto = async (req, res) => {
+    const { id } = req.user;
+    const cloudinaryImageUrl = req.file;
+
+    const user = await User.findById(id);
+    if (!user) {
+        res.status(401).json({ message: `User with ${id} not found` });
+        return;
+    }
+    await User.findByIdAndUpdate(id, { photo: cloudinaryImageUrl }, {new:true});
+    res.status(200).json({
+        id,
+        photo
+    })
 }
 
 const updateTheme = async (req, res) => {
@@ -231,6 +247,7 @@ export default {
     logout,
     current,
     update,
+    updateUserPhoto,
     updateTheme,
     letter
 }
