@@ -90,7 +90,7 @@ const refresh = async (req, res) => {
     try {
         const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
         const isExist = await User.findOne({ refreshToken: token });
-       console.log(isExist)
+       
         if (!isExist) {
             res.status(403).json({ message: "Token invalid" });
             return
@@ -153,7 +153,7 @@ const update = async (req, res) => {
     const { id } = req.params;
     const { name, email, password } = req.body;
     const cloudinaryImageUrl = req.file.path;
-   
+   console.log(name)
     const user = await User.findById(id);
 
     if (!user) {
