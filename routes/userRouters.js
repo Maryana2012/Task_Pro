@@ -21,7 +21,7 @@ userRouter.post('/logout', userValidators.authenticate, userControllers.logout);
 
 userRouter.get('/current', userValidators.authenticate, userControllers.current);
 
-userRouter.put('/update', userValidators.isEmptyBody,  userValidators.userUpdateValidator, userControllers.update);
+userRouter.put('/update', userValidators.isEmptyBody,userValidators.authenticate,  userValidators.userUpdateValidator, userControllers.update);
 
 userRouter.patch('/theme', userValidators.isEmptyBody, userValidators.authenticate, userValidators.isTheme, userControllers.updateTheme);
 
