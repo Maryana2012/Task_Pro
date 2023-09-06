@@ -27,7 +27,11 @@ const userSchema = new Schema({
     },
     photo: {
         type: Object,
+    },
+    imageFile: {
+        type: Object,
     }
+
 
 }, { versionKey: false, timestamps: true  })
 
