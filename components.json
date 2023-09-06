@@ -6,20 +6,20 @@
       "properties": {
         "name": {
           "type": "string",
-          "example": "Ivan Petrov"
+          "example": "User"
         },
         "email": {
           "type": "string",
-          "example": "ivan@example.com",
+          "example": "user@ukr.net",
           "format": "email"
         },
         "password": {
           "type": "string",
-          "example": "qwerty123"
+          "example": "1111"
         }
       }
     },
-    "RegResponse": {
+    "UserResponse": {
       "type": "object",
       "properties": {
         "id": {
@@ -28,11 +28,11 @@
         },
         "name": {
           "type": "string",
-          "example": "Ivan Petrov"
+          "example": "User"
         },
         "email": {
           "type": "string",
-          "example": "ivan@example.com",
+          "example": "user@ukr.net",
           "format": "email"
         },
         "thema": {
@@ -51,12 +51,12 @@
       "properties": {
         "email": {
           "type": "string",
-          "example": "ivan@example.com",
+          "example": "user@ukr.net",
           "format": "email"
         },
         "password": {
           "type": "string",
-          "example": "qwerty123"
+          "example": "1111"
         }
       }
     },
@@ -65,11 +65,11 @@
       "properties": {
         "id": {
           "type": "string",
-          "example": "7dh347fh4375fh45"
+          "example": "64f49bbe12baf28b80b04763"
         },
         "email": {
           "type": "string",
-          "example": "ivan@example.com",
+          "example": "user@ukr.net",
           "format": "email"
         },
         "thema": {
@@ -79,28 +79,6 @@
         "photo": {
           "type": "string",
           "example": "https://en.gravatar.com/"
-        }
-      }
-    },
-    "CurUserRequest": {
-      "type": "object",
-      "required": [],
-      "properties": {
-        "email": {
-          "type": "string",
-          "example": "anton@example.com",
-          "format": "email"
-        }
-      }
-    },
-    "CurUserResponse": {
-      "type": "object",
-      "required": [],
-      "properties": {
-        "email": {
-          "type": "string",
-          "example": "anton@example.com",
-          "format": "email"
         }
       }
     },
@@ -143,11 +121,11 @@
         },
         "password": {
           "type": "string",
-          "example": "777qwerty"
+          "example": "2222"
         },
         "photo": {
           "type": "string",
-          "example": "https://..."
+          "example": "https://"
         }
       }
     },
@@ -166,7 +144,7 @@
         },
         "password": {
           "type": "string",
-          "example": "777qwerty"
+          "example": "2222"
         },
         "theme": {
           "type": "string",
@@ -174,7 +152,7 @@
         },
         "photo": {
           "type": "string",
-          "example": "https://..."
+          "example": "https://"
         }
       }
     },
@@ -310,11 +288,11 @@
         },
         "icon": {
           "type": "string",
-          "example": "https://....."
+          "example": "https://..."
         },
         "background": {
           "type": "string",
-          "example": "https://....."
+          "example": "background#"
         }
       }
     },
@@ -332,7 +310,7 @@
       "properties": {
         "title": {
           "type": "string",
-          "example": "My board"
+          "example": "New column - 1"
         },
 
         "boardId": {
@@ -350,7 +328,7 @@
       "properties": {
         "title": {
           "type": "string",
-          "example": "New column - 1"
+          "example": "New title column"
         }
       }
     },
@@ -459,11 +437,15 @@
       "type": "string",
       "enum": ["low", "medium", "high", "without"]
     },
-    "Token": {
+    "accessToken": {
       "type": "string",
-      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
+      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0Zjc5MmE2MGJmZDYzYzM3NjI1MjJjNCIsImlhdCI6MTY5Mzk0NjUzNCwiZXhwIjoxNjk0MDI5MzM0fQ.b1N2H5UrJ5h__IFHf4TwIQHCqHMTnmFOkPKowDQrwJo"
     },
-    "res204": {
+    "refreshToken": {
+      "type": "string",
+      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0Zjc5MmE2MGJmZDYzYzM3NjI1MjJjNCIsImlhdCI6MTY5Mzk0NjUzNCwiZXhwIjoxNjk0NTUxMzM0fQ.pRKH_nb3YWUSCtU8OxQdtBC74c87_q3aJFzbTD5kx1o"
+    },
+    "204": {
       "type": "object",
       "properties": {
         "message": {
@@ -472,7 +454,7 @@
         }
       }
     },
-    "error400": {
+    "400": {
       "type": "object",
       "properties": {
         "message": {
@@ -481,7 +463,7 @@
         }
       }
     },
-    "error401": {
+    "401": {
       "type": "object",
       "properties": {
         "message": {
@@ -490,7 +472,7 @@
         }
       }
     },
-    "error403": {
+    "403": {
       "type": "object",
       "properties": {
         "message": {
@@ -499,7 +481,7 @@
         }
       }
     },
-    "error404": {
+    "404": {
       "type": "object",
       "properties": {
         "message": {
@@ -508,7 +490,7 @@
         }
       }
     },
-    "error409": {
+    "409": {
       "type": "object",
       "properties": {
         "message": {

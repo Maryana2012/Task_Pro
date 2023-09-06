@@ -24,10 +24,13 @@
                 "type": "object",
                 "properties": {
                   "user": {
-                    "$ref": "#/components/schemas/RegResponse"
+                    "$ref": "#/components/schemas/UserResponse"
                   },
-                  "token": {
-                    "$ref": "#/components/schemas/Token"
+                  "accessToken": {
+                    "$ref": "#/components/schemas/accessToken"
+                  },
+                  "refreshToken": {
+                    "$ref": "#/components/schemas/refreshToken"
                   }
                 }
               }
@@ -95,8 +98,11 @@
                   "user": {
                     "$ref": "#/components/schemas/LoginResponse"
                   },
-                  "token": {
-                    "$ref": "#/components/schemas/Token"
+                  "accessToken": {
+                    "$ref": "#/components/schemas/accessToken"
+                  },
+                  "refreshToken": {
+                    "$ref": "#/components/schemas/refreshToken"
                   }
                 }
               }
@@ -163,13 +169,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid signature"
-                  }
-                }
+                "$ref": "#/components/schemas/401"
               }
             }
           }
@@ -186,24 +186,32 @@
           "Bearer": []
         }
       ],
-      "requestBody": {
-        "description": "Authenticate users by providing their email in the request body.",
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/CurUserRequest"
-            }
-          }
+      "parameters": [
+        {
+          "name": "email",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "User's email address"
         }
-      },
+      ],
       "responses": {
         "200": {
           "description": "Ok",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CurUserResponse"
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/UserResponse"
+                  },
+                  "accessToken": {
+                    "$ref": "#/components/schemas/accessToken"
+                  }
+                }
               }
             }
           }
@@ -213,7 +221,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
+                  }
+                },
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                }
               }
             }
           }
@@ -221,7 +243,7 @@
       }
     }
   },
-  "/users/{id}/theme": {
+  "/users/theme": {
     "patch": {
       "tags": ["Auth"],
       "summary": "Update user theme by ID",
@@ -268,11 +290,35 @@
               }
             }
           }
+        },
+        "401": {
+          "description": "Unathorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
+                  }
+                },
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
   },
-  "/users/{id}/update": {
+  "/users/update": {
     "put": {
       "tags": ["Auth"],
       "summary": "Update user information",
@@ -310,7 +356,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
+                "$ref": "#/components/schemas/400"
               }
             }
           }
@@ -320,11 +366,25 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "user with /id/ not found"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "user not found": {
+                  "description": "",
+                  "value": {
+                    "message": "user with /id/ not found"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
+                  }
+                },
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
                   }
                 }
               }
@@ -364,7 +424,13 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "/***/ is required"
+                  }
+                }
               }
             }
           }
@@ -395,15 +461,23 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid signature"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
                   }
                 }
               }
@@ -445,11 +519,19 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "missing required /***/ field"
+                "$ref": "#/components/schemas/400"
+              },
+              "examples": {
+                "missing required field": {
+                  "description": "",
+                  "value": {
+                    "message": "missing required /***/ field"
+                  }
+                },
+                "empty body": {
+                  "description": "",
+                  "value": {
+                    "message": "/***/ is not allowed to be empty"
                   }
                 }
               }
@@ -457,15 +539,23 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid signature"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
                   }
                 }
               }
@@ -538,15 +628,23 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid signature"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
                   }
                 }
               }
@@ -591,15 +689,23 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid signature"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
                   }
                 }
               }
@@ -611,11 +717,19 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "board not found"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "ID is not valid": {
+                  "description": "",
+                  "value": {
+                    "message": "/***/ is not valid id"
+                  }
+                },
+                "board not found": {
+                  "description": "",
+                  "value": {
+                    "message": "board not found"
                   }
                 }
               }
@@ -667,15 +781,23 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid signature"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  },
+                  "invalid signature": {
+                    "description": "",
+                    "value": {
+                      "message": "invalid signature"
+                    }
                   }
                 }
               }
@@ -687,19 +809,19 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error404"
+                "$ref": "#/components/schemas/401"
               },
               "examples": {
+                "ID is not valid": {
+                  "description": "",
+                  "value": {
+                    "message": "/***/ is not valid id"
+                  }
+                },
                 "board not found": {
                   "description": "",
                   "value": {
                     "message": "board not found"
-                  }
-                },
-                "wrong password": {
-                  "description": "",
-                  "value": {
-                    "message": "email or password wrong"
                   }
                 }
               }
@@ -729,31 +851,23 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid signature"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
                   }
-                }
-              }
-            }
-          }
-        },
-        "403": {
-          "description": "Forbidden",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid boardId"
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
                   }
                 }
               }
@@ -765,11 +879,19 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "board not found"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "ID is not valid": {
+                  "description": "",
+                  "value": {
+                    "message": "/***/ is not valid id"
+                  }
+                },
+                "board not found": {
+                  "description": "",
+                  "value": {
+                    "message": "board not found"
                   }
                 }
               }
@@ -823,15 +945,47 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid signature"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "ID is not valid": {
+                  "description": "",
+                  "value": {
+                    "message": "/***/ is not valid id"
+                  }
+                },
+                "board not found": {
+                  "description": "",
+                  "value": {
+                    "message": "board not found"
                   }
                 }
               }
@@ -892,11 +1046,19 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "missing required title field"
+                "$ref": "#/components/schemas/400"
+              },
+              "examples": {
+                "missing required field": {
+                  "description": "",
+                  "value": {
+                    "message": "missing required title field"
+                  }
+                },
+                "title must be different": {
+                  "description": "",
+                  "value": {
+                    "message": "new title must be different"
                   }
                 }
               }
@@ -904,15 +1066,23 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid signature"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
                   }
                 }
               }
@@ -924,11 +1094,19 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "column not found"
+                "$ref": "#/components/schemas/404"
+              },
+              "examples": {
+                "column not found": {
+                  "description": "",
+                  "value": {
+                    "message": "column not found"
+                  }
+                },
+                "board not found": {
+                  "description": "",
+                  "value": {
+                    "message": "board not found"
                   }
                 }
               }
@@ -948,23 +1126,31 @@
       "security": [{ "Bearer": [] }],
       "responses": {
         "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/ColumnResponse" }
-              }
+          "description": "Ok",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ColumnResponse" }
             }
+          }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "invalid signature"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
                   }
                 }
               }
@@ -976,11 +1162,19 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "column not found"
+                "$ref": "#/components/schemas/404"
+              },
+              "examples": {
+                "column not found": {
+                  "description": "",
+                  "value": {
+                    "message": "column not found"
+                  }
+                },
+                "board not found": {
+                  "description": "",
+                  "value": {
+                    "message": "board not found"
                   }
                 }
               }
@@ -1020,17 +1214,45 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
+                "$ref": "#/components/schemas/400"
+              },
+              "examples": {
+                "missing required field": {
+                  "description": "",
+                  "value": {
+                    "message": "Missing required field: /***/"
+                  }
+                },
+                "empty body": {
+                  "description": "",
+                  "value": {
+                    "message": "missing fields"
+                  }
+                }
               }
             }
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
+                  }
+                }
               }
             }
           }
@@ -1058,11 +1280,25 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
+                  }
+                }
               }
             }
           }
@@ -1116,11 +1352,25 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
+                  }
+                }
               }
             }
           }
@@ -1211,11 +1461,25 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
+                  }
+                }
               }
             }
           }
@@ -1262,11 +1526,25 @@
           }
         },
         "401": {
-          "description": "Unauthorized",
+          "description": "Unathorized",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error401"
+                "$ref": "#/components/schemas/401"
+              },
+              "examples": {
+                "no signature": {
+                  "description": "",
+                  "value": {
+                    "message": "Not authorized"
+                  }
+                },
+                "invalid signature": {
+                  "description": "",
+                  "value": {
+                    "message": "invalid signature"
+                  }
+                }
               }
             }
           }

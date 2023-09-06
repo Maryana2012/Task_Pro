@@ -25,19 +25,13 @@ const addBoard = async (req, res, next) => {
     const { id } = req.user;
     const { title, icon, background } = req.body;
     
-    if (
-      !icon ||
-      !icon.trim()
-    ) {
-      return res.status(400).json({ message: "Icon is required" });
-    }
+    // if (
+    //   !icon ||
+    //   !icon.trim()
+    // ) {
+    //   return res.status(400).json({ message: "Icon is required" });
+    // }
 
-    if (
-      !title ||
-      !title.trim() 
-    ) {
-      return res.status(400).json({ message: "Title is required" });
-    }
     const board = await Board.findOne({ title });
     if (board) {
       res.status(409).json({ message: 'A board with the same title already exists' });
@@ -50,7 +44,7 @@ const addBoard = async (req, res, next) => {
       selectedBackground = backgrounds.find(bg => bg._id === background);
       console.log("selectedBackground:", selectedBackground);
       if (!selectedBackground) {
-        return res.status(404).json({ message: "Background not found" });
+        return res.status(404).json({ message: "Selected background not found" });
       }
     }
 
@@ -69,7 +63,6 @@ const addBoard = async (req, res, next) => {
 const getBoard = async (req, res, next) => {
   try {
     const { boardId } = req.params;
-    console.log(boardId);
 
     const result = await Board.findById(boardId);
 
@@ -130,13 +123,7 @@ const updateBoard = async (req, res, next) => {
 const deleteBoard = async (req, res, next) => {
   try {
     const { boardId } = req.params;
-    const board = await Board.findById(boardId);
-    if (!board) {
-      throw HttpError(404, "Board not found");
-    }
-    if (board._id.toString() !== boardId) {
-      throw HttpError(403, "Invalid boardId");
-    }
+   
     const result = await Board.findByIdAndDelete(boardId);
     if (!result) {
       throw HttpError(404, "Board not found");
@@ -154,9 +141,6 @@ const addColumn = async (req, res, next) => {
     const { boardId } = req.params;
 
     const { title } = req.body;
-    if (!title || !title.trim()) {
-      return res.status(400).json({ message: "Enter the column title" });
-    }
 
     const board = await Board.findById(boardId);
 
@@ -183,16 +167,15 @@ const updateColumn = async (req, res, next) => {
     const { boardId, columnId } = req.params;
 
     const { title } = req.body;
-    if (!title || !title.trim()) {
-      return res.status(400).json({ message: "Enter the column title" });
-    }
 
     const board = await Board.findById(boardId);
-
+    if (board === null) {
+      return res.status(404).json({ message: "Board not found" });
+    }
+  
     const columnIndex = board.columns.findIndex(
       (column) => column._id.toString() === columnId
     );
-
     if (columnIndex === -1) {
       return res.status(404).json({ message: "Column not found" });
     }
@@ -214,6 +197,9 @@ const deleteColumn = async (req, res, next) => {
   try {
     const { boardId, columnId } = req.params;
     const board = await Board.findById(boardId);
+    if (board === null) {
+      return res.status(404).json({ message: "Board not found" });
+    }
 
     const columnIndex = board.columns.findIndex(
       (column) => column._id.toString() === columnId
