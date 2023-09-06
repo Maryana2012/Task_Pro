@@ -179,7 +179,7 @@ const update = async (req, res) => {
 
 const updateUserPhoto = async (req, res) => {
     const { id } = req.user;
-    console.log(req.file)
+    console.log(req)
     const cloudinaryImageUrl = req.file;
 
     const user = await User.findById(id);
