@@ -165,7 +165,7 @@ const update = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword},  { new: true });
     
-    res.status(200).json({ user} );
+    res.status(200).json({ user: updatedUser} );
 }
 
 const updateUserPhoto = async (req, res) => {
