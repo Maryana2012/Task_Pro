@@ -185,7 +185,7 @@ const updateUserPhoto = async (req, res) => {
     }
     console.log(cloudinaryImageUrl)
    const newUser =  await User.findByIdAndUpdate(id, { photo: cloudinaryImageUrl }, {imageFile: imageFile}, {new:true});
-    res.status(200).json({user})
+    res.status(200).json({newUser})
 }
 
 const updateTheme = async (req, res) => {
