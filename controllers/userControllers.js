@@ -165,16 +165,7 @@ const update = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword},  { new: true });
     
-    res.status(200).json({
-        user: {
-            id,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            password: updatedUser.password,
-            theme: user.theme,
-            
-        }
-    });
+    res.status(200).json({ user} );
 }
 
 const updateUserPhoto = async (req, res) => {
@@ -193,10 +184,7 @@ const updateUserPhoto = async (req, res) => {
     }
     console.log(cloudinaryImageUrl)
    const newUser =  await User.findByIdAndUpdate(id, { photo: cloudinaryImageUrl }, {new:true});
-    res.status(200).json({
-        id,
-        photo: newUser.photo
-    })
+    res.status(200).json({user    })
 }
 
 const updateTheme = async (req, res) => {
