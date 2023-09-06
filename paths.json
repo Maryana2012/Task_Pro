@@ -973,7 +973,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/401"
+                "$ref": "#/components/schemas/404"
               },
               "examples": {
                 "ID is not valid": {
@@ -1189,7 +1189,7 @@
     "post": {
       "tags": ["Tasks"],
       "summary": "Add a new task",
-      "description": "This endpoint allows a user to add a new task.",
+      "description": "This endpoint allows a user to add a new task. Available priorities: 'low', 'medium', 'high', 'without'(default)",
       "security": [{ "Bearer": [] }],
       "requestBody": {
         "description": "Provide the necessary information to create a new task.",
@@ -1221,6 +1221,12 @@
                   "description": "",
                   "value": {
                     "message": "Missing required field: /***/"
+                  }
+                },
+                "priority must be one of...": {
+                  "description": "",
+                  "value": {
+                    "message": "priority must be one of [low, medium, high, without]"
                   }
                 },
                 "empty body": {
@@ -1308,7 +1314,15 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error404"
+                "$ref": "#/components/schemas/404"
+              },
+              "examples": {
+                "task not found": {
+                  "description": "",
+                  "value": {
+                    "message": "task not found"
+                  }
+                }
               }
             }
           }
@@ -1346,7 +1360,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
+                "$ref": "#/components/schemas/400"
+              },
+              "examples": {
+                "missing required field": {
+                  "description": "",
+                  "value": {
+                    "message": "Missing required field: /***/"
+                  }
+                },
+                "empty body": {
+                  "description": "",
+                  "value": {
+                    "message": "missing fields"
+                  }
+                }
               }
             }
           }
@@ -1380,7 +1408,15 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error404"
+                "$ref": "#/components/schemas/404"
+              },
+              "examples": {
+                "task not found": {
+                  "description": "",
+                  "value": {
+                    "message": "task not found"
+                  }
+                }
               }
             }
           }
@@ -1398,12 +1434,7 @@
           "description": "OK",
           "content": {
             "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": { "type": "string", "example": "Task deleted" }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/TaskResponse" }
             }
           }
         },
@@ -1412,7 +1443,15 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error404"
+                "$ref": "#/components/schemas/404"
+              },
+              "examples": {
+                "task not found": {
+                  "description": "",
+                  "value": {
+                    "message": "task not found"
+                  }
+                }
               }
             }
           }
@@ -1455,7 +1494,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error400"
+                "$ref": "#/components/schemas/400"
+              },
+              "examples": {
+                "missing required field": {
+                  "description": "",
+                  "value": {
+                    "message": "This id is not valid or not found"
+                  }
+                },
+                "empty body": {
+                  "description": "",
+                  "value": {
+                    "message": "missing fields"
+                  }
+                }
               }
             }
           }
@@ -1489,7 +1542,15 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error404"
+                "$ref": "#/components/schemas/404"
+              },
+              "examples": {
+                "task not found": {
+                  "description": "",
+                  "value": {
+                    "message": "task not found"
+                  }
+                }
               }
             }
           }
@@ -1503,7 +1564,7 @@
       "summary": "Filter tasks by priority",
       "description": "This endpoint allows a user to filter tasks by priority. Available priorities: 'low', 'medium', 'high', 'without'",
       "security": [{ "Bearer": [] }],
-      "parameters": [
+      "parameters": [{ "$ref": "#/components/schemas/boardIdParameters" },
         {
           "in": "query",
           "name": "priority",
@@ -1554,7 +1615,15 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/error404"
+                "$ref": "#/components/schemas/404"
+              },
+              "examples": {
+                "task not found": {
+                  "description": "",
+                  "value": {
+                    "message": "task not found"
+                  }
+                }
               }
             }
           }
