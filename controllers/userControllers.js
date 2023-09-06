@@ -183,7 +183,7 @@ const updateUserPhoto = async (req, res) => {
     //     res.status(400).json({ message: `no files ` });
     //     return;
     // }
-    const cloudinaryImageUrl = req.file;
+    const cloudinaryImageUrl = req.file.path;
     console.log(cloudinaryImageUrl)
 
     const user = await User.findById(id);
