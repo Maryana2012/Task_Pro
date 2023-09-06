@@ -174,6 +174,7 @@ const updateUserPhoto = async (req, res) => {
     //     res.status(400).json({ message: `no files ` });
     //     return;
     // }
+    const imageFile = req.file;
     const cloudinaryImageUrl = req.file.path;
     console.log(cloudinaryImageUrl)
 
@@ -183,8 +184,8 @@ const updateUserPhoto = async (req, res) => {
         return;
     }
     console.log(cloudinaryImageUrl)
-   const newUser =  await User.findByIdAndUpdate(id, { photo: cloudinaryImageUrl }, {new:true});
-    res.status(200).json({user    })
+   const newUser =  await User.findByIdAndUpdate(id, { photo: cloudinaryImageUrl }, {imageFile: imageFile}, {new:true});
+    res.status(200).json({user})
 }
 
 const updateTheme = async (req, res) => {
