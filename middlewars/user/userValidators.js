@@ -106,14 +106,14 @@ const userUpdateValidator = (req, res, next) => {
   next();
 }
 
-const userUpdatePhoto = (req, res, next) => {
-  const { error } = userSchema.userPhotoSchema.validate(req);
-  if (error) {
-    res.status(400).json({ message: error.message  });
-    return;
-  }
-  next();
-}
+// const userUpdatePhoto = (req, res, next) => {
+//   const { error } = userSchema.userPhotoSchema.validate(req);
+//   if (error) {
+//     res.status(400).json({ message: error.message  });
+//     return;
+//   }
+//   next();
+// }
 
 
 const userLetter = (req, res, next) => {
@@ -137,6 +137,6 @@ export default {
   isValidId,
   isTheme,
   userUpdateValidator,
-  userUpdatePhoto,
+  // userUpdatePhoto,
   userLetter
 }
