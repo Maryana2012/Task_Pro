@@ -179,10 +179,10 @@ const update = async (req, res) => {
 
 const updateUserPhoto = async (req, res) => {
     const { id } = req.user;
-    if (!req.file) {
-        res.status(401).json({ message: `no files ` });
-        return;
-    }
+    // if (!req.file) {
+    //     res.status(400).json({ message: `no files ` });
+    //     return;
+    // }
     const cloudinaryImageUrl = req.file;
     console.log(cloudinaryImageUrl)
 
