@@ -1,8 +1,6 @@
 import taskSchema from '../../schemas/taskSchemas.js';
 
 const taskValidator = (req, res, next) => {
-  console.log(req.body);
-
   const { error } = taskSchema.taskSchema.validate(req.body);
   if (error) {
     // Перевірка чи є помилка 'any.required'

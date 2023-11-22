@@ -17,35 +17,45 @@ const isEmptyBody = (req, res, next) => {
     }
     next();
 }
-
-const userRegisterValidator = (req, res, next) => {
-  const { error } = userSchema.userRegisterSchema.validate(req.body);
-   if (error) {
-      if (error.details[0].type === "any.required") {
-        res.status(400).json({ message: `missing required ${error.details[0].path[0]} field` });
-        return;
-      } else if (error.details[0].type.includes('base')) {
-        res.status(400).json( message.error );
-        return;
+export const validateBody = schema =>{
+  const func =(req, res, next)=>{
+      const {error} = schema.validate(req.body);
+      if(error){
+          res.status(400).json({message:error.message});
+          return;
       }
+      next();
   }
-  next();
-}  
-
-const userLoginValidator = (req, res, next) => {
-  const { error } = userSchema.userLoginSchema.validate(req.body);
-   if (error) {
-     if (error.details[0].type === "any.required") {
-         console.log('error')
-           res.status(400).json({ message: `missing required ${error.details[0].path[0]} field` });
-           return;
-        } else if (error.details[0].type.includes('base')) {
-           res.status(400).json( message.error);
-           return;
-      }
-  }
-  next();
+  return func;
 }
+
+// const userRegisterValidator = (req, res, next) => {
+//   const { error } = userSchema.userRegisterSchema.validate(req.body);
+//    if (error) {
+//       if (error.details[0].type === "any.required") {
+//         res.status(400).json({ message: `missing required ${error.details[0].path[0]} field` });
+//         return;
+//       } else if (error.details[0].type.includes('base')) {
+//         res.status(400).json( message.error );
+//         return;
+//       }
+//   }
+//   next();
+// }  
+
+// const userLoginValidator = (req, res, next) => {
+//   const { error } = userSchema.userLoginSchema.validate(req.body);
+//    if (error) {
+//      if (error.details[0].type === "any.required") {
+//            res.status(400).json({ message: `missing required ${error.details[0].path[0]} field` });
+//            return;
+//         } else if (error.details[0].type.includes('base')) {
+//            res.status(400).json( message.error);
+//            return;
+//       }
+//   }
+//   next();
+// }
 
 const authenticate = async (req, res, next) => {
     const { authorization = ""} = req.headers;
@@ -83,7 +93,8 @@ const authenticate = async (req, res, next) => {
 const isValidId = (req, res, next) => {
     const {id } = req.params;
     if (!isValidObjectId(id)) {
-        return next( res.status(404).json({message: `${id} is not valid`}));
+      res.status(404).json({message: `${id} is not valid`})
+      return
     }
     next();
 }
@@ -117,9 +128,7 @@ const userUpdateValidator = (req, res, next) => {
 
 
 const userLetter = (req, res, next) => {
-  console.log(req.body)
   const { error } = userSchema.userLetterSchema.validate(req.body);
-  console.log(error)
   if (error) {
     res.status(400).json({ message: error.message  });
     return;
@@ -130,8 +139,8 @@ const userLetter = (req, res, next) => {
 
 export default {
   isEmptyBody,
-  userRegisterValidator,
-  userLoginValidator,
+  // userRegisterValidator,
+  // userLoginValidator,
   authenticate,
   // refreshToken,
   isValidId,

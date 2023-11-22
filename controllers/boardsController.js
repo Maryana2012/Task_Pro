@@ -1,10 +1,7 @@
 import Board from "../models/board.js";
 import backgrounds from '../backgrounds/collectionBackgrounds.js'
-import HttpError from "../helpers/httpError.js";
-import mongoose from "mongoose";
 
-
-const getAllBoards = async (req, res, next) => {
+const getAllBoards = async (req, res) => {
   try {
     const { id } = req.user;
     const filter = { ownerId: id };
@@ -16,11 +13,11 @@ const getAllBoards = async (req, res, next) => {
     }).populate("ownerId", "id");
     res.json(result);
   } catch (error) {
-    next(error);
+    return res.status(404).json({ message: error.message });
   }
 };
 
-const addBoard = async (req, res, next) => {
+const addBoard = async (req, res) => {
   try {
     const { id } = req.user;
     const { title, icon, background } = req.body;
@@ -34,15 +31,13 @@ const addBoard = async (req, res, next) => {
 
     const board = await Board.findOne({ title });
     if (board) {
-      res.status(409).json({ message: 'A board with the same title already exists' });
-      return;
-  }
+     return res.status(409).json({ message: 'A board with the same title already exists' });
+    }
 
     let selectedBackground = null;
 
     if (background && background.trim() !== "null") {
       selectedBackground = backgrounds.find(bg => bg._id === background);
-      console.log("selectedBackground:", selectedBackground);
       if (!selectedBackground) {
         return res.status(404).json({ message: "Selected background not found" });
       }
@@ -56,26 +51,26 @@ const addBoard = async (req, res, next) => {
 
     res.status(201).json(result);
   } catch (error) {
-    next(error);
+    return res.status(404).json({ message: error.message });
   }
 };
 
-const getBoard = async (req, res, next) => {
+const getBoard = async (req, res) => {
   try {
     const { boardId } = req.params;
 
     const result = await Board.findById(boardId);
 
     if (!result) {
-      throw HttpError(404, "Board not found");
+     return res.status(404).json({message: "Board not found"})
     }
     res.json(result);
   } catch (error) {
-    next(error);
+    return res.status(404).json({ message: error.message });
   }
 };
 
-const updateBoard = async (req, res, next) => {
+const updateBoard = async (req, res) => {
   try {
     const { boardId } = req.params;
     const { title, icon, background } = req.body;
@@ -83,7 +78,7 @@ const updateBoard = async (req, res, next) => {
     const currentBoard = await Board.findById(boardId);
 
     if (!currentBoard) {
-      throw HttpError(404, "Board not found");
+      return res.status(404).json({message: "Board not found"})
     }
 
     const updatedFields = {};
@@ -105,38 +100,32 @@ const updateBoard = async (req, res, next) => {
     }
 
     if (Object.keys(updatedFields).length === 0) {
-      return res
-        .status(400)
-        .json({ message: "No fields to update" });
+        return res.status(400).json({ message: "No fields to update" });
     }
 
-    const result = await Board.findByIdAndUpdate(boardId, updatedFields, {
-      new: true,
-    });
+    const result = await Board.findByIdAndUpdate(boardId, updatedFields, {new: true});
 
     res.json(result);
   } catch (error) {
-    next(error);
+    return res.status(404).json({ message: error.message });
   }
 };
 
-const deleteBoard = async (req, res, next) => {
+const deleteBoard = async (req, res) => {
   try {
     const { boardId } = req.params;
    
     const result = await Board.findByIdAndDelete(boardId);
     if (!result) {
-      throw HttpError(404, "Board not found");
+      return res.status(404).json({message: "Board not found" })
     }
-    res.json({
-      message: "Board deleted",
-    });
+    res.json({message: "Board deleted"});
   } catch (error) {
-    next(error);
+    return res.status(404).json({ message: error.message });
   }
 };
 
-const addColumn = async (req, res, next) => {
+const addColumn = async (req, res) => {
   try {
     const { boardId } = req.params;
 
@@ -145,12 +134,9 @@ const addColumn = async (req, res, next) => {
     const board = await Board.findById(boardId);
 
     const existingColumn = board.columns.find(
-      (column) => column.title === title
-    );
+      (column) => column.title === title);
     if (existingColumn) {
-      return res
-        .status(409)
-        .json({ message: `A column with the title \"${title}"\ already exists` });
+      return res.status(409).json({ message: `A column with the title \"${title}"\ already exists` });
     }
 
     board.columns.push({ title, boardId: boardId });
@@ -158,11 +144,11 @@ const addColumn = async (req, res, next) => {
 
     res.status(201).json(board.columns[board.columns.length - 1]);
   } catch (error) {
-    next(error);
+    return res.status(404).json({ message: error.message });
   }
 };
 
-const updateColumn = async (req, res, next) => {
+const updateColumn = async (req, res) => {
   try {
     const { boardId, columnId } = req.params;
 
@@ -189,11 +175,11 @@ const updateColumn = async (req, res, next) => {
 
     res.json(board.columns[columnIndex]);
   } catch (error) {
-    next(error);
+    return res.status(404).json({ message: error.message });
   }
 };
 
-const deleteColumn = async (req, res, next) => {
+const deleteColumn = async (req, res) => {
   try {
     const { boardId, columnId } = req.params;
     const board = await Board.findById(boardId);
@@ -213,7 +199,7 @@ const deleteColumn = async (req, res, next) => {
     res.status(200).json({title, boardId, tasks, _id});
 
   } catch (error) {
-    next(error);
+    return res.status(404).json({ message: error.message });
   }
 };
 
@@ -227,7 +213,6 @@ const getBackgroundPreviews = (req, res) => {
     if (previewData.length === 0) {
       return res.status(404).json({ error: 'Backgrounds not found' });
     }
-
     res.status(200).json(previewData);
   } catch (error) {
     res.status(500).json({ message: error.message });

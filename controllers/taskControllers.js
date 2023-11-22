@@ -1,6 +1,5 @@
 import { Task } from '../models/task.js';
 
-// ok
 const getAllTasks = async (req, res) => {
   try {
     const { boardId } = req.params;
@@ -13,7 +12,6 @@ const getAllTasks = async (req, res) => {
   }
 }
 
-// ok 
 const addTask = async (req, res) => {
   try {
      const newTask = await Task.create({...req.body})
@@ -23,12 +21,10 @@ const addTask = async (req, res) => {
   }
 }
 
-// ok
 const updateTask = async (req, res) => {
   try {
     const { taskId } = req.params;
-    const { title, text, priority, deadline, boardId, columnId } = req.body;
-
+   
     const task = await Task.findById(taskId);
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
@@ -37,12 +33,10 @@ const updateTask = async (req, res) => {
     res.status(200).json(updateTask);
 
   } catch (error) {
-    console.error(error);
     return res.status(404).json({ message: error.message });
   }
 }
 
-// ok
 const deleteTask = async (req, res) => {
   try {
     const { taskId } = req.params;
@@ -60,7 +54,6 @@ const deleteTask = async (req, res) => {
   }
 }
 
-// ok
 const moveTask = async (req, res) => {
   try {
     const { taskId } = req.params;
@@ -79,7 +72,6 @@ const moveTask = async (req, res) => {
   }
 }
 
-// ok
 const getTasksByPriority = async (req, res) => {
   try {
     const { boardId, priority } = req.params;
@@ -88,7 +80,6 @@ const getTasksByPriority = async (req, res) => {
     
     res.status(200).json(filteredTasks);
   } catch (error) {
-    console.error(error);
     return res.status(404).json({ message: error.message });
   }
 };

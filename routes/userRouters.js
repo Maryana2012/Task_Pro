@@ -1,9 +1,9 @@
 import express from 'express';
 import userControllers from '../controllers/userControllers.js';
-import userValidators from '../middlewars/user/userValidators.js';
+import userValidators, { validateBody } from '../middlewars/user/userValidators.js';
 import passport from '../middlewars/user/google-authenticate.js';
 import uploadCloud from '../middlewars/user/cloudinary.js';
-
+import schema from '../schemas/userSchema.js'
 
 const userRouter = express.Router();
 
@@ -11,9 +11,12 @@ userRouter.get('/google', passport.authenticate('google', { scope: ["email", "pr
 
 userRouter.get('/google/callback', passport.authenticate('google', {session : false}), userControllers.googleAuth)
 
-userRouter.post('/register', userValidators.isEmptyBody, userValidators.userRegisterValidator, userControllers.register);
+// userRouter.post('/register', userValidators.isEmptyBody, userValidators.userRegisterValidator, userControllers.register);
 
-userRouter.post('/login', userValidators.isEmptyBody, userValidators.userLoginValidator, userControllers.login);
+userRouter.post('/register', userValidators.isEmptyBody, validateBody(schema.userRegisterSchema), userControllers.register);
+
+// userRouter.post('/login', userValidators.isEmptyBody, userValidators.userLoginValidator, userControllers.login);
+userRouter.post('/login', userValidators.isEmptyBody, validateBody(schema.userLoginSchema), userControllers.login);
 
 userRouter.post('/refresh',  userControllers.refresh)
 
