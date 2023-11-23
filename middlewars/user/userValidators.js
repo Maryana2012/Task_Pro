@@ -129,6 +129,7 @@ const userUpdateValidator = (req, res, next) => {
 
 const userLetter = (req, res, next) => {
   const { error } = userSchema.userLetterSchema.validate(req.body);
+ 
   if (error) {
     res.status(400).json({ message: error.message  });
     return;
