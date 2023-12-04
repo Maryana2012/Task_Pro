@@ -156,11 +156,12 @@ const update = async (req, res) => {
     const { id } = req.user;
     const imageFile = req.file;
     const { name, email, password } = req.body;
-    console.log('id:', id);
-    console.log('imageFile:', imageFile)
-    console.log('name:', name)
-    console.log('email:', email)
-    console.log('password', password)
+    console.log(req.body)
+    // console.log('id:', id);
+    // console.log('imageFile:', imageFile)
+    // console.log('name:', name)
+    // console.log('email:', email)
+    // console.log('password', password)
 //     try {
 //         const cloudinaryImageUrl = req.file.path;
 //         console.log(cloudinaryImageUrl)
