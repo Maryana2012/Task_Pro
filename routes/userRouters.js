@@ -24,11 +24,11 @@ userRouter.post('/logout', userValidators.authenticate, userControllers.logout);
 
 userRouter.get('/current', userValidators.authenticate, userControllers.current);
 
-userRouter.put('/update', userValidators.isEmptyBody,userValidators.authenticate,  userValidators.userUpdateValidator, userControllers.update);
+userRouter.patch('/update', userValidators.authenticate, userControllers.update);
 
 userRouter.patch('/theme', userValidators.isEmptyBody, userValidators.authenticate, userValidators.isTheme, userControllers.updateTheme);
 
-userRouter.patch('/photo', uploadCloud.single('photo'), userValidators.authenticate, userControllers.updateUserPhoto);
+// userRouter.patch('/photo', uploadCloud.single('photo'), userValidators.authenticate, userControllers.updateUserPhoto);
 
 userRouter.post('/letter', userValidators.isEmptyBody, userValidators.userLetter, userControllers.letter);
 
