@@ -152,7 +152,6 @@ const current = async (req, res) => {
 };
 
 const update = async (req, res) => {
-    // const { id } = req.params;
     const { id } = req.user;
     const cloudinaryImageUrl = req.file.path;
     const { name, email, password } = req.body;
@@ -220,6 +219,7 @@ const updateTheme = async (req, res) => {
             theme
         })   
     } catch (error) {
+        console.log(error.message)
         return res.status(404).json({ message: error.message });
     }
 }
