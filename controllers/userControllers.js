@@ -154,10 +154,7 @@ const current = async (req, res) => {
 const update = async (req, res) => {
     // const { id } = req.params;
     const { id } = req.user;
-    // const imageFile = req.file;
-    const cloudinaryImageUrl = req.file;
-    console.log(cloudinaryImageUrl)
-    // const cloudinaryImageUrl = req.file.path;
+    const cloudinaryImageUrl = req.file.path;
     const { name, email, password } = req.body;
    
     try {
@@ -166,10 +163,19 @@ const update = async (req, res) => {
           return res.status(401).json({ message: `User with ${id} not found` });
         }
         
-     
-        const hashPassword = await bcrypt.hash(password, 10);
-        const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword},  { new: true });
+        if(!cloudinaryImageUrl){
+           return res.status(400).json({ message: `no files ` }); 
+        } else{
+            await User.findByIdAndUpdate(id, {avatarURL:cloudinaryImageUrl}, {new:true})
+        }
         
+        if(password !=='undefined'){
+            const hashPassword = await bcrypt.hash(password, 10);
+            await User.findByIdAndUpdate(id, { password: hashPassword }, {new:true});
+         }
+      
+        await User.findByIdAndUpdate(id, {name, email}, {new:true});
+
         res.status(200).json({ user: updatedUser} );
         
     } catch (error) {

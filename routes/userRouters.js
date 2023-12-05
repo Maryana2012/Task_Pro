@@ -4,7 +4,7 @@ import userValidators, { validateBody } from '../middlewars/user/userValidators.
 import passport from '../middlewars/user/google-authenticate.js';
 import uploadCloud from '../middlewars/user/cloudinary.js';
 import schema from '../schemas/userSchema.js'
-import { upload } from '../middlewars/user/upload.js';
+
 
 const userRouter = express.Router();
 
