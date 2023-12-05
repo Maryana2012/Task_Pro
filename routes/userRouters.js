@@ -25,7 +25,7 @@ userRouter.post('/logout', userValidators.authenticate, userControllers.logout);
 
 userRouter.get('/current', userValidators.authenticate, userControllers.current);
 
-userRouter.patch('/update', userValidators.authenticate, upload.single('photo'), userControllers.update);
+userRouter.patch('/update', uploadCloud.single('photo'), userValidators.authenticate, userControllers.update);
 
 userRouter.patch('/theme', userValidators.isEmptyBody, userValidators.authenticate, userValidators.isTheme, userControllers.updateTheme);
 
