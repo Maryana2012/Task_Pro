@@ -154,33 +154,27 @@ const current = async (req, res) => {
 const update = async (req, res) => {
     // const { id } = req.params;
     const { id } = req.user;
-    const imageFile = req.file;
+    // const imageFile = req.file;
+    const cloudinaryImageUrl = req.file;
+    console.log(cloudinaryImageUrl)
+    // const cloudinaryImageUrl = req.file.path;
     const { name, email, password } = req.body;
-    console.log(req.body)
-    // console.log('id:', id);
-    // console.log('imageFile:', imageFile)
-    // console.log('name:', name)
-    // console.log('email:', email)
-    // console.log('password', password)
-//     try {
-//         const cloudinaryImageUrl = req.file.path;
-//         console.log(cloudinaryImageUrl)
-//         // const cloudinaryImageUrl = req.file;
-//     //    console.log(name)
-//         const user = await User.findById(id);
-    
-//         if (!user) {
-//           return res.status(401).json({ message: `User with ${id} not found` });
-//         }
+   
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+          return res.status(401).json({ message: `User with ${id} not found` });
+        }
         
-//         const hashPassword = await bcrypt.hash(password, 10);
-//         const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword},  { new: true });
+
+        const hashPassword = await bcrypt.hash(password, 10);
+        const updatedUser = await User.findByIdAndUpdate(id, { email, name, password: hashPassword},  { new: true });
         
-//         res.status(200).json({ user: updatedUser} );
+        res.status(200).json({ user: updatedUser} );
         
-//     } catch (error) {
-//         return res.status(404).json({ message: error.message });
-//     }
+    } catch (error) {
+        return res.status(404).json({ message: error.message });
+    }
 }
 
 // const updateUserPhoto = async (req, res) => {
@@ -190,7 +184,7 @@ const update = async (req, res) => {
 //         //     res.status(400).json({ message: `no files ` });
 //         //     return;
 //         // }
-//         const imageFile = req.file;
+        // const imageFile = req.file;
 //         const cloudinaryImageUrl = req.file.path;
 //         console.log(cloudinaryImageUrl)
     
