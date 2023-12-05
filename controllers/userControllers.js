@@ -156,7 +156,7 @@ const update = async (req, res) => {
     const { id } = req.user;
     // const imageFile = req.file;
     const cloudinaryImageUrl = req.file;
-    // console.log(cloudinaryImageUrl)
+    console.log(cloudinaryImageUrl)
     // const cloudinaryImageUrl = req.file.path;
     const { name, email, password } = req.body;
    
