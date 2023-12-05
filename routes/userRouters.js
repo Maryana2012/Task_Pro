@@ -4,6 +4,7 @@ import userValidators, { validateBody } from '../middlewars/user/userValidators.
 import passport from '../middlewars/user/google-authenticate.js';
 import uploadCloud from '../middlewars/user/cloudinary.js';
 import schema from '../schemas/userSchema.js'
+import { upload } from '../middlewars/user/upload.js';
 
 const userRouter = express.Router();
 
@@ -24,7 +25,7 @@ userRouter.post('/logout', userValidators.authenticate, userControllers.logout);
 
 userRouter.get('/current', userValidators.authenticate, userControllers.current);
 
-userRouter.patch('/update', userValidators.authenticate, userControllers.update);
+userRouter.patch('/update', userValidators.authenticate, upload.single('photo'), userControllers.update);
 
 userRouter.patch('/theme', userValidators.isEmptyBody, userValidators.authenticate, userValidators.isTheme, userControllers.updateTheme);
 
