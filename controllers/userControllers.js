@@ -175,8 +175,12 @@ const update = async (req, res) => {
       
         await User.findByIdAndUpdate(id, {name, email}, {new:true});
         const updateUser = User.findById(id) 
-        console.log(updateUser)
-        res.status(200).json({ user: updateUser} );
+        // console.log(updateUser)
+        res.status(200).json({ 
+            name:updateUser.name,
+            email:updateUser.email,
+            photo: updateUser.photo
+        } );
         
     } catch (error) {
         return res.status(404).json({ message: error.message });
