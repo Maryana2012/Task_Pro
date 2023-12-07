@@ -154,6 +154,7 @@ const current = async (req, res) => {
 const update = async (req, res) => {
     const { id } = req.user;
     const cloudinaryImageUrl = req.file.path;
+  console.log(cloudinaryImageUrl)
     const { name, email, password } = req.body;
    
     try {
@@ -180,7 +181,7 @@ const update = async (req, res) => {
         res.status(200).json({ 
             name:updateUser.name,
             email:updateUser.email,
-            photo: updateUser.photo,
+            avatarURL: updateUser.avatarURL,
             theme: updateUser.theme,
             accessToken: updateUser.accessToken,
             refreshToken: updateUser.refreshToken,
