@@ -161,7 +161,7 @@ const update = async (req, res) => {
             return res.status(401).json({ message: `User with ${id} not found` });
         }
         
-        if(req.file.path){
+        if(req.file.path !== 'undefined'){
             const cloudinaryImageUrl = req.file.path;
             await User.findByIdAndUpdate(id, {photo:cloudinaryImageUrl}, {new:true})
         }
