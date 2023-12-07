@@ -162,11 +162,12 @@ const update = async (req, res) => {
             return res.status(401).json({ message: `User with ${id} not found` });
         }
         
-        if(req.file !== 'undefined'){
-            const cloudinaryImageUrl = req.file.path;
-            await User.findByIdAndUpdate(id, {photo:cloudinaryImageUrl}, {new:true})
+        if(!req.file){
+            return res.status(400).json({message:'no files'})
+            // const cloudinaryImageUrl = req.file.path;
+            // await User.findByIdAndUpdate(id, {photo:cloudinaryImageUrl}, {new:true})
         }
-        if(password !=='undefined'){
+        if(password !== 'undefined'){
             const hashPassword = await bcrypt.hash(password, 10);
             await User.findByIdAndUpdate(id, { password: hashPassword }, {new:true});
          }
