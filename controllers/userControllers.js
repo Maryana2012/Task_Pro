@@ -166,7 +166,7 @@ const update = async (req, res) => {
         if(!cloudinaryImageUrl){
            return res.status(400).json({ message: `no files ` }); 
         } else{
-            await User.findByIdAndUpdate(id, {avatarURL:cloudinaryImageUrl}, {new:true})
+            await User.findByIdAndUpdate(id, {photo:cloudinaryImageUrl}, {new:true})
         }
         
         if(password !=='undefined'){
@@ -181,7 +181,7 @@ const update = async (req, res) => {
         res.status(200).json({ 
             name:updateUser.name,
             email:updateUser.email,
-            avatarURL: updateUser.avatarURL,
+            photo: updateUser.photo,
             theme: updateUser.theme,
             accessToken: updateUser.accessToken,
             refreshToken: updateUser.refreshToken,
