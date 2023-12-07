@@ -175,7 +175,8 @@ const update = async (req, res) => {
       
         await User.findByIdAndUpdate(id, {name, email}, {new:true});
         const updateUser =await User.findById(id) 
-        // console.log(updateUser)
+        console.log(updateUser)
+
         res.status(200).json({ 
             name:updateUser.name,
             email:updateUser.email,
