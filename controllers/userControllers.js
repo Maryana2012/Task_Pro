@@ -154,13 +154,13 @@ const current = async (req, res) => {
 const update = async (req, res) => {
     const { id } = req.user;
     const { name, email, password } = req.body;
+    console.log(req.file.path) 
     
     try {
         const user = await User.findById(id);
         if (!user) {
             return res.status(401).json({ message: `User with ${id} not found` });
         }
-        console.log(req.file.path) 
         
         if(req.file.path !== 'undefined'){
             const cloudinaryImageUrl = req.file.path;
