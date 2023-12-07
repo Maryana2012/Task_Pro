@@ -154,8 +154,7 @@ const current = async (req, res) => {
 const update = async (req, res) => {
     const { id } = req.user;
     const { name, email, password } = req.body;
-    console.log(req.file) 
-    
+      
     try {
         const user = await User.findById(id);
         if (!user) {
@@ -163,54 +162,27 @@ const update = async (req, res) => {
         }
         
         if(req.file){
-            // return res.status(400).json({message:'no files'})
             const cloudinaryImageUrl = req.file.path;
-            await User.findByIdAndUpdate(id, {photo:cloudinaryImageUrl}, {new:true})
+            await User.findByIdAndUpdate(id, {photo: cloudinaryImageUrl}, {new:true})
         }
-        if(password !== 'undefined'){
+        if(password){
             const hashPassword = await bcrypt.hash(password, 10);
             await User.findByIdAndUpdate(id, { password: hashPassword }, {new:true});
          }
       
         await User.findByIdAndUpdate(id, {name, email}, {new:true});
         const updateUser =await User.findById(id) 
-        console.log(updateUser)
-
+       
         res.status(200).json({ 
             name:updateUser.name,
             email:updateUser.email,
             photo: updateUser.photo,
-            // theme: updateUser.theme,
-            // accessToken: updateUser.accessToken,
-            // refreshToken: updateUser.refreshToken,
         } );
         
     } catch (error) {
         return res.status(404).json({ message: error.message });
     }
 }
-
-// const updateUserPhoto = async (req, res) => {
-//     const { id } = req.user;
-//     try {
-//         // if (!req.file) {
-//         //     res.status(400).json({ message: `no files ` });
-//         //     return;
-//         // }
-        // const imageFile = req.file;
-//         const cloudinaryImageUrl = req.file.path;
-//         console.log(cloudinaryImageUrl)
-    
-//         const user = await User.findById(id);
-//         if (!user) {
-//           return  res.status(401).json({ message: `User with ${id} not found` });
-//         }
-//         const newUser =  await User.findByIdAndUpdate(id, { photo: cloudinaryImageUrl }, {imageFile: imageFile}, {new:true});
-//         res.status(200).json({newUser})
-//     } catch (error) {
-//         return res.status(404).json({ message: error.message });
-//     }
-// }
 
 const updateTheme = async (req, res) => {
     const { theme } = req.body;
@@ -227,7 +199,6 @@ const updateTheme = async (req, res) => {
             theme
         })   
     } catch (error) {
-        console.log(error.message)
         return res.status(404).json({ message: error.message });
     }
 }
@@ -273,7 +244,6 @@ export default {
     logout,
     current,
     update,
-    // updateUserPhoto,
     updateTheme,
     letter
 }
