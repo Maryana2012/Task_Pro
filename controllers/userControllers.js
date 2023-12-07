@@ -153,18 +153,18 @@ const current = async (req, res) => {
 
 const update = async (req, res) => {
     const { id } = req.user;
-    const cloudinaryImageUrl = req.file.path;
     const { name, email, password } = req.body;
-   
+    
     try {
         const user = await User.findById(id);
         if (!user) {
-          return res.status(401).json({ message: `User with ${id} not found` });
+            return res.status(401).json({ message: `User with ${id} not found` });
         }
         
-        if(!cloudinaryImageUrl){
-           return res.status(400).json({ message: `no files ` }); 
+        if(!req.file.path){
+            return res.status(400).json({ message: `no files ` }); 
         } else{
+            const cloudinaryImageUrl = req.file.path;
             await User.findByIdAndUpdate(id, {photo:cloudinaryImageUrl}, {new:true})
         }
         
