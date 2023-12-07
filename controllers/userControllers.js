@@ -154,7 +154,7 @@ const current = async (req, res) => {
 const update = async (req, res) => {
     const { id } = req.user;
     const { name, email, password } = req.body;
-    console.log(req.file.path) 
+    console.log(req.file) 
     
     try {
         const user = await User.findById(id);
