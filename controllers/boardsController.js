@@ -22,13 +22,6 @@ const addBoard = async (req, res) => {
     const { id } = req.user;
     const { title, icon, background } = req.body;
     
-    // if (
-    //   !icon ||
-    //   !icon.trim()
-    // ) {
-    //   return res.status(400).json({ message: "Icon is required" });
-    // }
-
     const board = await Board.findOne({ title });
     if (board) {
      return res.status(409).json({ message: 'A board with the same title already exists' });
@@ -56,15 +49,16 @@ const addBoard = async (req, res) => {
 };
 
 const getBoard = async (req, res) => {
-  try {
-    const { boardId } = req.params;
+  const { boardId } = req.params;
 
+  try {
     const result = await Board.findById(boardId);
 
     if (!result) {
      return res.status(404).json({message: "Board not found"})
     }
     res.json(result);
+    
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }

@@ -5,6 +5,11 @@ const addBoardSchema = Joi.object({
     icon: Joi.string().required(),
     background: Joi.string()
 })
+const updateBoardSchema = Joi.object({
+    title: Joi.string().trim().min(1).required(),
+    icon: Joi.string().required(),
+    background: Joi.string()
+})
 
 const addColumnSchema = Joi.object({
     title: Joi.string().trim().min(1).required(),
@@ -17,5 +22,6 @@ const updateColumnSchema = Joi.object({
 export default {
     addBoardSchema,
     addColumnSchema,
+    updateBoardSchema,
     updateColumnSchema
 }

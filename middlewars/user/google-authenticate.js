@@ -2,7 +2,6 @@ import {nanoid} from 'nanoid';
 import { Strategy } from 'passport-google-oauth2';
 import passport from 'passport';
 import dotenv from 'dotenv';
-// import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import User from '../../models/user.js'

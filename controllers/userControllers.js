@@ -25,7 +25,7 @@ const register = async (req, res) => {
             id: newUser._id
         }
        
-        const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+        const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "1d" });
         const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
         await User.findByIdAndUpdate(newUser._id, { accessToken,  refreshToken});
      
@@ -62,7 +62,7 @@ const login = async (req, res) => {
         const payload = {
             id: user._id
         }
-        const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+        const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "1d" });
         const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
         await User.findByIdAndUpdate(user._id, { accessToken, refreshToken  });
         res.status(200).json({

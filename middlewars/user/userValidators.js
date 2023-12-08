@@ -9,52 +9,24 @@ import User from '../../models/user.js';
 dotenv.config();
 const { ACCESS_SECRET_KEY } = process.env;
 
-const isEmptyBody = (req, res, next) => {
-    const keys = Object.keys(req.body);
-     if (keys.length === 0) {
-       res.status(400).json({ message: 'missing fields' });
-       return
-    }
-    next();
-}
-export const validateBody = schema =>{
-  const func =(req, res, next)=>{
-      const {error} = schema.validate(req.body);
-      if(error){
-          res.status(400).json({message:error.message});
-          return;
-      }
-      next();
-  }
-  return func;
-}
-
-// const userRegisterValidator = (req, res, next) => {
-//   const { error } = userSchema.userRegisterSchema.validate(req.body);
-//    if (error) {
-//       if (error.details[0].type === "any.required") {
-//         res.status(400).json({ message: `missing required ${error.details[0].path[0]} field` });
-//         return;
-//       } else if (error.details[0].type.includes('base')) {
-//         res.status(400).json( message.error );
-//         return;
+// const isEmptyBody = (req, res, next) => {
+//     const keys = Object.keys(req.body);
+//      if (keys.length === 0) {
+//        res.status(400).json({ message: 'missing fields' });
+//        return
+//     }
+//     next();
+// }
+// export const validateBody = schema =>{
+//   const func =(req, res, next)=>{
+//       const {error} = schema.validate(req.body);
+//       if(error){
+//           res.status(400).json({message:error.message});
+//           return;
 //       }
+//       next();
 //   }
-//   next();
-// }  
-
-// const userLoginValidator = (req, res, next) => {
-//   const { error } = userSchema.userLoginSchema.validate(req.body);
-//    if (error) {
-//      if (error.details[0].type === "any.required") {
-//            res.status(400).json({ message: `missing required ${error.details[0].path[0]} field` });
-//            return;
-//         } else if (error.details[0].type.includes('base')) {
-//            res.status(400).json( message.error);
-//            return;
-//       }
-//   }
-//   next();
+//   return func;
 // }
 
 const authenticate = async (req, res, next) => {
@@ -90,14 +62,14 @@ const authenticate = async (req, res, next) => {
 //   next();
 // } 
 
-const isValidId = (req, res, next) => {
-    const {id } = req.params;
-    if (!isValidObjectId(id)) {
-      res.status(404).json({message: `${id} is not valid`})
-      return
-    }
-    next();
-}
+// const isValidId = (req, res, next) => {
+//     const {id } = req.params;
+//     if (!isValidObjectId(id)) {
+//       res.status(404).json({message: `${id} is not valid`})
+//       return
+//     }
+//     next();
+// }
 
 const isTheme = (req, res, next) => {
   const { error } = userSchema.userThemeSchema.validate(req.body);
@@ -139,12 +111,12 @@ const userLetter = (req, res, next) => {
 
 
 export default {
-  isEmptyBody,
+  // isEmptyBody,
   // userRegisterValidator,
   // userLoginValidator,
   authenticate,
   // refreshToken,
-  isValidId,
+  // isValidId,
   isTheme,
   userUpdateValidator,
   // userUpdatePhoto,
