@@ -20,8 +20,10 @@ boardsRouter.get("/:boardId", userValidators.authenticate, isValidBoardId, board
 boardsRouter.put("/:boardId", userValidators.authenticate, isEmptyBody, validateBody(schema.updateBoardSchema), isValidBoardId, boardsController.updateBoard);
 
 boardsRouter.delete("/:boardId", userValidators.authenticate, isValidBoardId, boardsController.deleteBoard);
+
 boardsRouter.post('/:boardId/columns', userValidators.authenticate, isValidBoardId, validateBody(schema.addColumnSchema), boardsController.addColumn);
-boardsRouter.patch('/:boardId/columns/:columnId', userValidators.authenticate, isValidBoardId,isValidColumnId, validateBody(schema.updateColumnSchema), boardsController.updateColumn);
+
+boardsRouter.patch('/:boardId/columns/:columnId', userValidators.authenticate, isValidBoardId, isValidColumnId, validateBody(schema.updateColumnSchema), boardsController.updateColumn);
 boardsRouter.delete('/:boardId/columns/:columnId', userValidators.authenticate, isValidBoardId, isValidColumnId, boardsController.deleteColumn);
 
 export default boardsRouter;

@@ -120,15 +120,14 @@ const deleteBoard = async (req, res) => {
 };
 
 const addColumn = async (req, res) => {
-  try {
-    const { boardId } = req.params;
+  const { boardId } = req.params;
+  const { title } = req.body;
 
-    const { title } = req.body;
+  try {
 
     const board = await Board.findById(boardId);
-
-    const existingColumn = board.columns.find(
-      (column) => column.title === title);
+    const existingColumn = board.columns.find((column) => column.title === title);
+    
     if (existingColumn) {
       return res.status(409).json({ message: `A column with the title \"${title}"\ already exists` });
     }
