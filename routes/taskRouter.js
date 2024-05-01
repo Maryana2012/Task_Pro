@@ -1,6 +1,6 @@
 import express from 'express';
 
-import taskSchema from '../schemas/taskSchemas.js';
+import {taskSchema} from '../schemas/taskSchemas.js';
 import taskControllers from '../controllers/taskControllers.js';
 import userValidators from '../middlewars/user/userValidators.js';
 import taskValidators from '../middlewars/tasks/taskValidators.js';
