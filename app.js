@@ -8,12 +8,12 @@ import taskRouter from './routes/taskRouter.js'
 import boardsRouter from './routes/boardsRouter.js'
 
 // для swagger
-import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./swagger.json" assert { type: "json" };
+// import swaggerUi from "swagger-ui-express";
+// import swaggerDocument from "./swagger.json" assert { type: "json" };
 // import swaggerDocument from "./swagger.json";
-import paths from "./paths.json" assert { type: "json" };
+// import paths from "./paths.json" assert { type: "json" };
 // import paths from "./paths.json";
-import components from "./components.json" assert { type: "json" };;
+// import components from "./components.json" assert { type: "json" };;
 // import components from "./components.json";
 
 
@@ -21,8 +21,8 @@ const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
-swaggerDocument.paths = paths;
-swaggerDocument.components = components;
+// swaggerDocument.paths = paths;
+// swaggerDocument.components = components;
 
 app.use(logger(formatsLogger))
 app.use(cors())
@@ -33,11 +33,11 @@ app.use('/users', userRouter);
 app.use('/tasks', taskRouter);
 app.use('/boards', boardsRouter);
 
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocument)
-);
+// app.use(
+//   "/api-docs",
+//   swaggerUi.serve,
+//   swaggerUi.setup(swaggerDocument)
+// );
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
