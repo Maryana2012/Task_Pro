@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix **/*.js"
   },
   "engines": {
-    "node": ">=14.20.1"
+    "node": ">=18.18.0"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
