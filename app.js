@@ -9,12 +9,12 @@ import boardsRouter from './routes/boardsRouter.js'
 
 // для swagger
 import swaggerUi from "swagger-ui-express";
-// import swaggerDocument from "./swagger.json" assert { type: "json" };
-import swaggerDocument from "./swagger.json";
-// import paths from "./paths.json" assert { type: "json" };
-import paths from "./paths.json";
-// import components from "./components.json" assert { type: "json" };;
-import components from "./components.json";
+import swaggerDocument from "./swagger.json" assert { type: "json" };
+// import swaggerDocument from "./swagger.json";
+import paths from "./paths.json" assert { type: "json" };
+// import paths from "./paths.json";
+import components from "./components.json" assert { type: "json" };;
+// import components from "./components.json";
 
 
 const app = express();
